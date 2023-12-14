@@ -1,5 +1,7 @@
 import json
-request_payload = json.loads("""{
+
+request_payload = json.loads(
+    """{
     "action": "next",
     "messages": [
         {
@@ -31,7 +33,10 @@ request_payload = json.loads("""{
     },
     "force_paragen": false,
     "force_rate_limit": false
-}""")
+}"""
+)
+
+print(request_payload)
 
 request_cookies = {
     "__cf_bm": "H9nkBbW9dHKsa8d.ZebZzh._.RoS35l_0mhP0IARPdc-1702460863-1-ARgM6ruYrZDvsljCGPoaQDvObZj4BTapKO/UK+ieLXYTKxuMVwxBc9ei5TNWEqTctgW0U36cidl+iGeyb541TbQ=",
@@ -45,7 +50,7 @@ request_cookies = {
     "ajs_user_id": "user-IUW2uKHQ6bwv4bdiI8IYtjqA",
     "cf_clearance": "1uGUVqave.DM7cSPP68eDuEIPyRq4myRL9Fmj8Ds.38-1702460867-0-1-ca1a82ea.5b1bdeef.739a9bce-0.2.1702460867",
     "intercom-device-id-dgkjq2bp": "38fd45fe-eb38-40b5-919e-b3974b213252",
-    "intercom-session-dgkjq2bp": "ZkNYQmwzM000dGdaK1RRaERRSFhYSEdTSSt2dHpIYWJuMnlEc29qUTdaak1QSDJNeWI0VGRSMTVxSytxcmZvOC0tQXM3ZGNJWmpSTWxuM2FyNFgxbERzQT09--6cdc6de1601f203f8d1ab982fadf9685a606fec4"
+    "intercom-session-dgkjq2bp": "ZkNYQmwzM000dGdaK1RRaERRSFhYSEdTSSt2dHpIYWJuMnlEc29qUTdaak1QSDJNeWI0VGRSMTVxSytxcmZvOC0tQXM3ZGNJWmpSTWxuM2FyNFgxbERzQT09--6cdc6de1601f203f8d1ab982fadf9685a606fec4",
 }
 
 request_headers = {
@@ -55,7 +60,7 @@ request_headers = {
     "Alt-Used": "chat.openai.com",
     "Authorization": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1UaEVOVUpHTkVNMVFURTRNMEZCTWpkQ05UZzVNRFUxUlRVd1FVSkRNRU13UmtGRVFrRXpSZyJ9.eyJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJzbWFydHdhY2FsZWJAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsicG9pZCI6Im9yZy1xZEd0UUM5ZXlsRkt6TTNLRzdlVERoRjAiLCJ1c2VyX2lkIjoidXNlci1JVVcydUtIUTZid3Y0YmRpSThJWXRqcUEifSwiaXNzIjoiaHR0cHM6Ly9hdXRoMC5vcGVuYWkuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTA4ODk5NzU5MTgyMzA1MTAzOTUxIiwiYXVkIjpbImh0dHBzOi8vYXBpLm9wZW5haS5jb20vdjEiLCJodHRwczovL29wZW5haS5vcGVuYWkuYXV0aDBhcHAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTcwMjQ2MDg2MywiZXhwIjoxNzAzMzI0ODYzLCJhenAiOiJUZEpJY2JlMTZXb1RIdE45NW55eXdoNUU0eU9vNkl0RyIsInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUgbW9kZWwucmVhZCBtb2RlbC5yZXF1ZXN0IG9yZ2FuaXphdGlvbi5yZWFkIG9yZ2FuaXphdGlvbi53cml0ZSBvZmZsaW5lX2FjY2VzcyJ9.2Wo6QF3M86Bkx9gAiYaPUuGcHMFTj0Oi_Hj9LcNMbD_QFMM5f7NgU8FDYYWjkaHnOHr9POtArmKigUSiopL2_RyBQsGw2oyWVig5MHVSMot82mKkBK7STFmBmSVUZkkI_Fhv6hgJ6CEUC4sO5ZUTk630UuSGQr10EOSszBrVI0_uLyJPi4RG5Psv-24QyCJrIdA8kSfeEecnBPiTUBoQTyZh0swJuAnUe_JzzfTSsU-jSZYh87LUkH8w3XekAuMuMzF_xCw44H0E8uuSHQK8s7oWiMwaMlCQA4gHNUIWa3YvxyRB4txkzlO7a9fjg3NEG7UF7Gg1W5kWPnh8lvo1dA",
     "Connection": "keep-alive",
-    #"Content-Length": "904",
+    # "Content-Length": "904",
     "Content-Type": "application/json",
     "Host": "chat.openai.com",
     "Origin": "https://chat.openai.com",
@@ -63,5 +68,5 @@ request_headers = {
     "Sec-Fetch-Dest": "empty",
     "Sec-Fetch-Mode": "cors",
     "Sec-Fetch-Site": "same-origin",
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0"
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0",
 }
