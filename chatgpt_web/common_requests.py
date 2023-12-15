@@ -1,78 +1,6 @@
 import json
 
-request_payload_mod = {
-    "batch": [
-        {
-            "timestamp": "2023-12-15T10:44:00.566Z",
-            "integrations": {
-                "Segment.io": True
-            },
-            "userId": "user-IUW2uKHQ6bwv4bdiI8IYtjqA",
-            "anonymousId": "a0b59320-c342-4c9c-bb24-a99471552968",
-            "event": "Show Starter Prompts",
-            "type": "track",
-            "properties": {
-                "prompt_count": 4,
-                "prompt_type": "starter",
-                "titles": [
-                    "Design a database schema",
-                    "Plan a trip",
-                    "Give me ideas",
-                    "Come up with concepts"
-                ],
-                "origin": "chat",
-                "openai_app": "API"
-            },
-            "context": {
-                "page": {
-                    "path": "/",
-                    "referrer": "",
-                    "search": "",
-                    "title": "ChatGPT",
-                    "url": "https://chat.openai.com/"
-                },
-                "userAgent": "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0",
-                "locale": "en-US",
-                "library": {
-                    "name": "analytics.js",
-                    "version": "npm:next-1.56.0"
-                }
-            },
-            "messageId": "ajs-next-3154852a6626ae6a48a031e2506fe59d",
-            "_metadata": {
-                "bundled": [
-                    "Segment.io"
-                ],
-                "unbundled": [],
-                "bundledIds": []
-            }
-        }
-    ],
-    "sentAt": "2023-12-15T10:44:06.590Z"
-}
-request_payload = {
-
-    "action": "next",
-    "messages": [
-        {
-            #"id": "aaa2921d-d8c9-4516-80bd-ed1ea6895b84",
-            "author": {
-                "role": "user"
-            },
-            "content": {
-                "content_type": "text",
-                "parts": [
-                    "Is this correct for sure?"
-                ]
-            },
-            "metadata": {}
-        }
-    ],
-    "conversation_id": "b3779121-8767-4202-9527-3058f40e94e9",
-    "model": "text-davinci-002-render-sha"
-}
-
-request_payload_mod_1 = json.loads("""{
+request_payload = json.loads("""{
     "action": "next",
     "messages": [
         {
@@ -186,57 +114,6 @@ request_cookies = {
     "cf_clearance": "1uGUVqave.DM7cSPP68eDuEIPyRq4myRL9Fmj8Ds.38-1702460867-0-1-ca1a82ea.5b1bdeef.739a9bce-0.2.1702460867",
     "intercom-device-id-dgkjq2bp": "38fd45fe-eb38-40b5-919e-b3974b213252",
     "intercom-session-dgkjq2bp": "ZkNYQmwzM000dGdaK1RRaERRSFhYSEdTSSt2dHpIYWJuMnlEc29qUTdaak1QSDJNeWI0VGRSMTVxSytxcmZvOC0tQXM3ZGNJWmpSTWxuM2FyNFgxbERzQT09--6cdc6de1601f203f8d1ab982fadf9685a606fec4",
-}
-
-request_payload_init = {
-    "batch": [
-        {
-            "timestamp": "2023-12-15T10:44:00.566Z",
-            "integrations": {
-                "Segment.io": True
-            },
-            "userId": "{ajs_user_id}",
-            "anonymousId": "{ajs_anonymous_id}",
-            "event": "Show Starter Prompts",
-            "type": "track",
-            "properties": {
-                "prompt_count": 4,
-                "prompt_type": "starter",
-                "titles": [
-                    "Design a database schema",
-                    "Plan a trip",
-                    "Give me ideas",
-                    "Come up with concepts"
-                ],
-                "origin": "chat",
-                "openai_app": "API"
-            },
-            "context": {
-                "page": {
-                    "path": "/",
-                    "referrer": "",
-                    "search": "",
-                    "title": "ChatGPT",
-                    "url": "https://chat.openai.com/"
-                },
-                "userAgent": "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0",
-                "locale": "en-US",
-                "library": {
-                    "name": "analytics.js",
-                    "version": "npm:next-1.56.0"
-                }
-            },
-            "messageId": "ajs-next-3154852a6626ae6a48a031e2506fe59d",
-            "_metadata": {
-                "bundled": [
-                    "Segment.io"
-                ],
-                "unbundled": [],
-                "bundledIds": []
-            }
-        }
-    ],
-    "sentAt": "2023-12-15T10:44:06.590Z"
 }
 
 request_headers = {

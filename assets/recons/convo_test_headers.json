@@ -1,0 +1,23 @@
+{
+    "Date": "Fri, 15 Dec 2023 13:19:02 GMT",
+    "Content-Type": "application/json",
+    "Content-Length": "89",
+    "Connection": "keep-alive",
+    "access-control-allow-credentials": "true",
+    "access-control-allow-origin": "https://chat.openai.com",
+    "vary": "Origin",
+    "x-envoy-upstream-service-time": "301",
+    "strict-transport-security": "max-age=31536000; includeSubDomains; preload",
+    "CF-Cache-Status": "DYNAMIC",
+    "Set-Cookie": "__cf_bm=uWdBwbNoWzA.g8vlCO3SFU9lEkiPY9BM2UqHPmSjWFI-1702646342-1-AUsWCmotUNM7zvAEZYW7bckQLN16Q1qrNQEZuX6r1MziH4yhDY12qoDez1KVbk8YrF73+goVg7zojP+yNeau3AU=; path=/; expires=Fri, 15-Dec-23 13:49:02 GMT; domain=.chat.openai.com; HttpOnly; Secure; SameSite=None, __cflb=0H28vVfF4aAyg2hkHFH9CkdHRXPsfCUf79nz7p7F3bb; SameSite=None; Secure; path=/; expires=Fri, 15-Dec-23 13:49:02 GMT; HttpOnly, _cfuvid=.GzraX8iSj19m6VVYp.SfobxROOYi1SbRqO3P4r8CHw-1702646342902-0-604800000; path=/; domain=.chat.openai.com; HttpOnly; Secure; SameSite=None",
+    "Report-To": "{\"endpoints\":[{\"url\":\"https:\\/\\/a.nel.cloudflare.com\\/report\\/v3?s=w2f31889PKh6lZrhTAgoNm36GbMjpxP038%2F52YckmTruNwPNbNdBTzNrmekKQjLQfPiF%2F75fP1RW3Eugimb%2F8WE6WR3R%2FQM9ZT0Ab2ucsKj1GniyEASMsVVteT6qrYlFGw%3D%3D\"}],\"group\":\"cf-nel\",\"max_age\":604800}",
+    "NEL": "{\"success_fraction\":0.01,\"report_to\":\"cf-nel\",\"max_age\":604800}",
+    "X-Content-Type-Options": "nosniff",
+    "Cross-Origin-Opener-Policy": "same-origin",
+    "Referrer-Policy": "strict-origin-when-cross-origin",
+    "X-Robots-Tag": "nofollow",
+    "Content-Security-Policy": "default-src 'self'; script-src 'self' 'nonce-pub1f79f8ac903a5872ae5f53026d20a77c' 'unsafe-inline' 'unsafe-eval' js.stripe.com https://chat.openai.com js.intercomcdn.com https://tcr9i.chat.openai.com https://oaistatic.com https://*.oaistatic.com https://chatgpt.com https://widget.intercom.io https://*.chatgpt.com; script-src-elem 'unsafe-inline' js.stripe.com https://chat.openai.com js.intercomcdn.com https://tcr9i.chat.openai.com challenges.cloudflare.com https://oaistatic.com https://*.oaistatic.com https://chatgpt.com auth0.openai.com https://widget.intercom.io https://*.chatgpt.com; img-src * 'self' data: https:; style-src 'self' 'unsafe-inline' https://chat.openai.com https://*.oaistatic.com https://chatgpt.com https://tcr9i.chat.openai.com https://*.chatgpt.com https://oaistatic.com; font-src 'self' data: https://*.oaistatic.com; connect-src 'self' statsigapi.net https://chat.openai.com wss://fp-async-webps-staging.webpubsub.azure.com *.oaiusercontent.com https://events.statsigapi.net api-js.mixpanel.com https://tcr9i.chat.openai.com fileserviceuploadsperm.blob.core.windows.net o33249.ingest.sentry.io wss://fp-async-webps-prod.webpubsub.azure.com https://featuregates.org https://oaistatic.com http://localhost:* https://*.oaistatic.com https://chatgpt.com api-iam.intercom.io https://*.chatgpt.com rum.browser-intake-datadoghq.com; frame-src tcr9i.chat.openai.com challenges.cloudflare.com js.stripe.com; worker-src blob:; report-uri https://csp-report.browser-intake-datadoghq.com/api/v2/logs?dd-api-key=pub1f79f8ac903a5872ae5f53026d20a77c&dd-evp-origin=content-security-policy&ddsource=csp-report;",
+    "Server": "cloudflare",
+    "CF-RAY": "835ef9d7bed465ed-MBA",
+    "alt-svc": "h3=\":443\"; ma=86400"
+}

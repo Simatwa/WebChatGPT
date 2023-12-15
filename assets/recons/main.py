@@ -2,7 +2,7 @@ import requests
 from common_requests import request_cookies, request_payload, request_headers
 import sort_dict as dicter
 
-write_resp_to = "resp.html"
+write_resp_to = "resp-2.html"
 
 
 class ChatWeb:
@@ -15,9 +15,9 @@ class ChatWeb:
     @dicter.error_handler(True)
     def send_payload(self, payload):
         resp = self.session.post(url=self.payload_url, stream=True, json=payload)
-        dicter.write_data("stream_headers.json", dict(resp.headers))
+        dicter.write_data("stream_headers-2.json", dict(resp.headers))
         if "application" in resp.headers.get("content-type"):
-            dicter.write_data("stream_response.json", resp.json())
+            dicter.write_data("stream_response-2.json", resp.json())
         else:
             with open(dicter.abs_path(write_resp_to), "w") as fh:
                 fh.write(resp.text)
