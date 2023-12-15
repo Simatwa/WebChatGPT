@@ -1,6 +1,71 @@
 import json
 
-request_payload = json.loads(
+request_payload = json.loads("""{
+    "action": "next",
+    "messages": [
+        {
+            "id": "aaa2921d-d8c9-4516-80bd-ed1ea6895b84",
+            "author": {
+                "role": "user"
+            },
+            "content": {
+                "content_type": "text",
+                "parts": [
+                    "Is this correct for sure?"
+                ]
+            },
+            "metadata": {}
+        }
+    ],
+    "conversation_id": "ef19ca72-4a7c-464e-8b0e-db36a0dc3734",
+    "parent_message_id": "5b45a98c-0871-48ed-895b-f36f188c3d50",
+    "model": "text-davinci-002-render-sha",
+    "timezone_offset_min": -180,
+    "suggestions": [],
+    "history_and_training_disabled": false,
+    "arkose_token": null,
+    "conversation_mode": {
+        "kind": "primary_assistant"
+    },
+    "force_paragen": false,
+    "force_rate_limit": false
+}""")
+
+request_payload_org_1 = {
+    "action": "next",
+    "messages": [
+        {
+            "id": "aaa262a0-d409-449b-8e03-1a80db1383c9",
+            "author": {
+                "role": "user"
+            },
+            "content": {
+                "content_type": "text",
+                "parts": [
+                    "Write a script to automate sending daily email reports in Python, and walk me through how I would set it up."
+                ]
+            }
+        }
+    ],
+    "parent_message_id": "aaa1847b-9122-4f0c-9cf9-1f0a529b3cb0",
+    "model": "text-davinci-002-render-sha",
+    "timezone_offset_min": -180,
+    "suggestions": [
+        "Write a script to automate sending daily email reports in Python, and walk me through how I would set it up.",
+        "I have a photoshoot tomorrow. Can you recommend me some colors and outfit options that will look good on camera?",
+        "Tell me a random fun fact about the Roman Empire",
+        "Show me a code snippet of a website's sticky header in CSS and JavaScript."
+    ],
+    "history_and_training_disabled": False,
+    "arkose_token": None,
+    "conversation_mode": {
+        "kind": "primary_assistant"
+    },
+    "force_paragen": False,
+    "force_rate_limit": False
+}
+
+request_payload_org = json.loads(
     """{
     "action": "next",
     "messages": [
@@ -35,8 +100,6 @@ request_payload = json.loads(
     "force_rate_limit": false
 }"""
 )
-
-print(request_payload)
 
 request_cookies = {
     "__cf_bm": "H9nkBbW9dHKsa8d.ZebZzh._.RoS35l_0mhP0IARPdc-1702460863-1-ARgM6ruYrZDvsljCGPoaQDvObZj4BTapKO/UK+ieLXYTKxuMVwxBc9ei5TNWEqTctgW0U36cidl+iGeyb541TbQ=",

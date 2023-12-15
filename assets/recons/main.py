@@ -14,7 +14,7 @@ class ChatWeb:
 
     @dicter.error_handler(True)
     def send_payload(self, payload):
-        resp = self.session.post(url=self.payload_url, stream=True, data=payload)
+        resp = self.session.post(url=self.payload_url, stream=True, json=payload)
         dicter.write_data("stream_headers.json", dict(resp.headers))
         if "application" in resp.headers.get("content-type"):
             dicter.write_data("stream_response.json", resp.json())

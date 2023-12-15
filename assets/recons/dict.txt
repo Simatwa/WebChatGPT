@@ -1,17 +1,1 @@
-{
- "Accept" :	"text/event-stream",
- "Accept-Encoding" : "gzip, deflate, br",
- "Accept-Language"	: "en-US",
- "Alt-Used" :	"chat.openai.com",
- "Authorization":	"Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik1UaEVOVUpHTkVNMVFURTRNMEZCTWpkQ05UZzVNRFUxUlRVd1FVSkRNRU13UmtGRVFrRXpSZyJ9.eyJodHRwczovL2FwaS5vcGVuYWkuY29tL3Byb2ZpbGUiOnsiZW1haWwiOiJzbWFydHdhY2FsZWJAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWV9LCJodHRwczovL2FwaS5vcGVuYWkuY29tL2F1dGgiOnsicG9pZCI6Im9yZy1xZEd0UUM5ZXlsRkt6TTNLRzdlVERoRjAiLCJ1c2VyX2lkIjoidXNlci1JVVcydUtIUTZid3Y0YmRpSThJWXRqcUEifSwiaXNzIjoiaHR0cHM6Ly9hdXRoMC5vcGVuYWkuY29tLyIsInN1YiI6Imdvb2dsZS1vYXV0aDJ8MTA4ODk5NzU5MTgyMzA1MTAzOTUxIiwiYXVkIjpbImh0dHBzOi8vYXBpLm9wZW5haS5jb20vdjEiLCJodHRwczovL29wZW5haS5vcGVuYWkuYXV0aDBhcHAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTcwMjQ2MDg2MywiZXhwIjoxNzAzMzI0ODYzLCJhenAiOiJUZEpJY2JlMTZXb1RIdE45NW55eXdoNUU0eU9vNkl0RyIsInNjb3BlIjoib3BlbmlkIGVtYWlsIHByb2ZpbGUgbW9kZWwucmVhZCBtb2RlbC5yZXF1ZXN0IG9yZ2FuaXphdGlvbi5yZWFkIG9yZ2FuaXphdGlvbi53cml0ZSBvZmZsaW5lX2FjY2VzcyJ9.2Wo6QF3M86Bkx9gAiYaPUuGcHMFTj0Oi_Hj9LcNMbD_QFMM5f7NgU8FDYYWjkaHnOHr9POtArmKigUSiopL2_RyBQsGw2oyWVig5MHVSMot82mKkBK7STFmBmSVUZkkI_Fhv6hgJ6CEUC4sO5ZUTk630UuSGQr10EOSszBrVI0_uLyJPi4RG5Psv-24QyCJrIdA8kSfeEecnBPiTUBoQTyZh0swJuAnUe_JzzfTSsU-jSZYh87LUkH8w3XekAuMuMzF_xCw44H0E8uuSHQK8s7oWiMwaMlCQA4gHNUIWa3YvxyRB4txkzlO7a9fjg3NEG7UF7Gg1W5kWPnh8lvo1dA",
- "Connection" :	"keep-alive",
- "Content-Length"	: "904",
- "Content-Type" :	"application/json",
- "Host" :	"chat.openai.com",
- "Origin" :	"https://chat.openai.com",
- "Referer" :	"https://chat.openai.com/",
- "Sec-Fetch-Dest":	"empty",
- "Sec-Fetch-Mode" :	"cors",
- "Sec-Fetch-Site"	:"same-origin",
- "User-Agent"	: "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0"
-}
+{"action":"next","messages":[{"id":"aaa2921d-d8c9-4516-80bd-ed1ea6895b84","author":{"role":"user"},"content":{"content_type":"text","parts":["Is this correct?"]},"metadata":{}}],"conversation_id":"ef19ca72-4a7c-464e-8b0e-db36a0dc3734","parent_message_id":"5b45a98c-0871-48ed-895b-f36f188c3d50","model":"text-davinci-002-render-sha","timezone_offset_min":-180,"suggestions":[],"history_and_training_disabled":false,"arkose_token":null,"conversation_mode":{"kind":"primary_assistant"},"force_paragen":false,"force_rate_limit":false}
