@@ -111,6 +111,8 @@ Response
 ```json
 {
     "items": [
+
+        // This first one is auto-generated thus being new
         {
             "id": "b3779121-8767-4202-9527-3058f40e94e9",
             "title": "Helpful User, Assistant",
@@ -175,3 +177,58 @@ Response
   ```
 
 7. POST : [	https://chat.openai.com/backend-api/conversation/gen_title/86f73b54-0f51-47ba-84a3-07c1e25dce81](https://chat.openai.com/backend-api/conversation/gen_title/86f73b54-0f51-47ba-84a3-07c1e25dce81) - *Generate title*
+
+Payload 
+
+```json
+{
+    "message_id":"14588fa1-94fd-43d1-9104-e5b108bd8d7a"
+}
+```
+
+### On Continuing conversation
+
+1. POST : [https://chat.openai.com/backend-api/conversation](https://chat.openai.com/backend-api/conversation)
+
+```json
+{
+    "action": "next",
+    "messages": [
+        {
+            "id": "aaa292aa-2314-4541-ae51-e6358df444e1",
+            "author": {
+                "role": "user"
+            },
+            "content": {
+                "content_type": "text",
+                "parts": [
+                    "How true is that?"
+                ]
+            },
+            "metadata": {}
+        }
+    ],
+    "conversation_id": "86f73b54-0f51-47ba-84a3-07c1e25dce81",
+    "parent_message_id": "14588fa1-94fd-43d1-9104-e5b108bd8d7a",
+    "model": "text-davinci-002-render-sha",
+    "timezone_offset_min": -180,
+    "suggestions": [],
+    "history_and_training_disabled": false,
+    "arkose_token": null,
+    "conversation_mode": {
+        "kind": "primary_assistant"
+    },
+    "force_paragen": false,
+    "force_rate_limit": false
+}
+```
+
+> Then the cycle continues
+
+### Notes:
+
+i. The first payload contains suggestions but continuing lacks.
+
+ii. The history returned contains the conversation_id, which is common across that all conversation.
+
+iii. The conversation_id is used to generate conversation title ; `https://chat.openai.com/backend-api/conversation/gen_title/<conversation_title>`
