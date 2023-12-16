@@ -229,6 +229,6 @@ Payload
 
 i. The first payload contains suggestions but continuing lacks.
 
-ii. The history returned contains the conversation_id, which is common across that all conversation.
+ii. The history returned contains the conversation_id, which is common across all that conversation.
 
 iii. The conversation_id is used to generate conversation title ; `https://chat.openai.com/backend-api/conversation/gen_title/<conversation_title>`

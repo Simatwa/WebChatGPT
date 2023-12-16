@@ -1,7 +1,3 @@
 from .main import ChatGPT
-import utils
 
-__all__= [
-    'ChatGPT',
-    'utils'
-]
+__all__ = ["ChatGPT", "utils"]
