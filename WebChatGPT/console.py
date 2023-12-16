@@ -14,7 +14,8 @@ dotenv.find_dotenv(".env")
 
 
 class InteractiveChatGPT(cmd.Cmd):
-    prompt = f"[{getpass.getuser().capitalize()}@ChatGPT-Web](v0.0.1)\r\n└──╼ ❯❯❯"
+    # prompt = f"[{getpass.getuser().capitalize()}@WebChatGPT](v0.0.1)\r\n└──╼ ❯❯❯"
+    prompt = f"┌─[{getpass.getuser().capitalize()}@WebChatGPT](v0.0.1)\r\n└──╼ ❯❯❯"
 
     def __init__(self, auth, cookie_path, model, index, *args, **kwargs):
         super().__init__(*args, **kwargs)
