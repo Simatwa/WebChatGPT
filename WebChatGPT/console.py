@@ -58,6 +58,7 @@ Submit any bug at : https://github.com/Simatwa/ChatGPT-Web/issues/new
 
 @click.group("chat")
 def chat():
+    """Reverse Engineered ChatGPT Web-version"""
     pass
 
 
@@ -141,4 +142,10 @@ def generate(auth, cookie_path, model, index, prompt):
 
 
 def main():
+    print(
+        """
+  Repo : https://github.com/Simatwa/WebChatGPT
+    By : Smartwa
+          """
+    )
     chat()
