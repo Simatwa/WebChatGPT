@@ -1,4 +1,75 @@
 from datetime import datetime, timezone
+import json
+import logging
+import os
+
+headers = request_headers = {
+    "Accept": "text/event-stream",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "en-US",
+    "Alt-Used": "chat.openai.com",
+    "Authorization": f"Bearer %(value)s",
+    "Connection": "keep-alive",
+    # "Content-Length": "904",
+    "Content-Type": "application/json",
+    "Host": "chat.openai.com",
+    "Origin": "https://chat.openai.com",
+    "Referer": "https://chat.openai.com/",
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-origin",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0",
+}
+
+def error_handler(exit_on_error:bool=False, default=None):
+    """Decorator for handling exceptions
+
+    Args:
+        exit_on_error (bool, optional): ``. Defaults to False.
+        default (_type_, optional): Return this incase of an exception. Defaults to None.
+    """
+    def decorator(func):
+        def main(*args, **kwargs):
+            try:
+                return func(*args,**kwargs)
+            except Exception as e:
+                logging.error(e.args[1] if len(e.args)>1 else str(e))
+                if exit_on_error:
+                    exit(1)
+                return default
+        return main
+    return decorator#
+
+def get_request_headers(auth:str) -> dict:
+    """Generate Http request headers
+
+    Args:
+        auth (str): OpenAI's authorization header
+
+    Returns:
+        dict: Request headers
+    """
+    auth_template = headers["Authorization"]
+    headers['Authorization'] = auth_template%{ "value" : auth}
+    return headers
+
+@error_handler(exit_on_error=True)
+def get_cookies(path:str) -> dict:
+    """Reads cookies and format thems
+
+    Args:
+        path (str): Path to cookie file
+
+    Returns:
+        dict: Cookies sorted {name :  value}
+    """
+    resp = {}
+    with open(
+        path
+    ) as fh:
+        for entry in json.load(fh):
+            resp[entry['name']]=entry['value']
+        return resp
 
 def is_json(response:object, info:str=''):
     """Checks whether the response is application/json formatted
@@ -117,3 +188,15 @@ def generate_payload(self:object,prompt:str) -> dict:
     "force_rate_limit": False
     }
     return payload_template
+
+def get_message(response:dict) -> str:
+    """Extracts generated message from the response
+
+    Args:
+        response (dict): `bot.ask` response 
+
+    Returns:
+        str: Extracted message
+    """
+    assert isinstance(response, dict), "'response' should be of 'dict' data-type"
+    return response['message']['content']['parts'][0]

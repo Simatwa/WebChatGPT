@@ -1,30 +1,38 @@
 {
-    "action": "next",
-    "messages": [
-        {
-            "id": "aaa292aa-2314-4541-ae51-e6358df444e1",
-            "author": {
-                "role": "user"
-            },
-            "content": {
-                "content_type": "text",
-                "parts": [
-                    "How true is that?"
+    "message": {
+        "id": "2c98d9ff-495c-4f08-af9e-affbd17441c9",
+        "author": {
+            "role": "assistant",
+            "name": null,
+            "metadata": {}
+        },
+        "create_time": 1702666802.823688,
+        "update_time": null,
+        "content": {
+            "content_type": "text",
+            "parts": [
+                "Of course, your privacy matters! I don't store or remember our conversations once they're completed, so your information is kept confidential. If there's anything specific you'd like to discuss or if you have any concerns, feel free to let me know. I'm here to assist you!"
+            ]
+        },
+        "status": "finished_successfully",
+        "end_turn": true,
+        "weight": 1.0,
+        "metadata": {
+            "finish_details": {
+                "type": "stop",
+                "stop_tokens": [
+                    100260
                 ]
             },
-            "metadata": {}
-        }
-    ],
-    "conversation_id": "86f73b54-0f51-47ba-84a3-07c1e25dce81",
-    "parent_message_id": "14588fa1-94fd-43d1-9104-e5b108bd8d7a",
-    "model": "text-davinci-002-render-sha",
-    "timezone_offset_min": -180,
-    "suggestions": [],
-    "history_and_training_disabled": false,
-    "arkose_token": null,
-    "conversation_mode": {
-        "kind": "primary_assistant"
+            "inline_gizmo_id": null,
+            "is_complete": true,
+            "message_type": "next",
+            "model_slug": "text-davinci-002-render-sha",
+            "parent_id": "7bf27013-a47a-438c-ae17-0ee846b4f97d",
+            "timestamp_": "absolute"
+        },
+        "recipient": "all"
     },
-    "force_paragen": false,
-    "force_rate_limit": false
+    "conversation_id": "affdda8c-588c-4342-9869-26c5bd7c44ae",
+    "error": null
 }

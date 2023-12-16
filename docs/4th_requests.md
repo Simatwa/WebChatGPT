@@ -65,7 +65,7 @@
 
 3. GET : [https://chat.openai.com/backend-api/accounts/check/v4-2023-04-27](https://chat.openai.com/backend-api/accounts/check/v4-2023-04-27) - *Fetches user data*
 
-4. POST : [https://chat.openai.com/backend-api/conversation](https://chat.openai.com/backend-api/conversation) - *Generate Conversation*
+4. POST : [https://chat.openai.com/backend-api/conversation](https://chat.openai.com/backend-api/conversation) - *Generate Message*
 
  payload :
    ```json
