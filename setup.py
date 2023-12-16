@@ -18,7 +18,7 @@ setup(
     author_email="simatwacaleb@proton.me",
     description="Reverse Engineered ChatGPT Web-version",
     packages=["WebChatGPT"],
-    url="https://github.com/Simatwa/ChatGPT-Web",
+    url="https://github.com/Simatwa/WebChatGPT",
     project_urls={"Bug Report": "https://github.com/Simatwa/WebChatGPT/issues/new"},
     entry_points={
         "console_scripts": [
