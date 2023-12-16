@@ -123,6 +123,7 @@ class ChatGPT:
                     # print(resp)
                     if (
                         not "message_id" in resp.keys()
+                        and "message" in resp.keys()
                         and resp["message"]["status"] == "finished_successfully"
                         and resp["message"]["end_turn"] == True
                     ):

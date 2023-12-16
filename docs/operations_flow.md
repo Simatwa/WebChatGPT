@@ -1,12 +1,12 @@
-### Payloads
+### Flow of Events
 
-- On opening new chat, the following happens:
+On opening new chat, the following http requests are made:
 
 1. GET [https://chat.openai.com/backend-api/prompt_library/?limit=4&offset=0](https://chat.openai.com/backend-api/prompt_library/?limit=4&offset=0) - *Generates Random prompts*
   
 2. POST : [https://chat.openai.com/ces/v1/b](https://chat.openai.com/ces/v1/b) - *Sends telemetrics*
   
-  Payload:
+ Payload:
 
 ```json
     {
@@ -16,8 +16,8 @@
             "integrations": {
                 "Segment.io": true
             },
-            "userId": "user-IUW2uKHQ6bwv4bdiI8IYtjqA",
-            "anonymousId": "a0b59320-c342-4c9c-bb24-a99471552968",
+            "userId": "user-IUW2uKHQ6bwv4bdiI8IYxxxx",
+            "anonymousId": "a0b59320-c342-4c9c-bb24-a9947155xxxx",
             "event": "Show Starter Prompts",
             "type": "track",
             "properties": {
@@ -47,7 +47,7 @@
                     "version": "npm:next-1.56.0"
                 }
             },
-            "messageId": "ajs-next-4088ee126f46655b371bdddb9ac5b78f",
+            "messageId": "ajs-next-4088ee126f46655b371bdddb9ac5xxxx",
             "_metadata": {
                 "bundled": [
                     "Segment.io"
@@ -61,19 +61,20 @@
 }
 ```
   
-- Upon sending a text the following happens:
+Upon sending a text :
 
 3. GET : [https://chat.openai.com/backend-api/accounts/check/v4-2023-04-27](https://chat.openai.com/backend-api/accounts/check/v4-2023-04-27) - *Fetches user data*
 
-4. POST : [https://chat.openai.com/backend-api/conversation](https://chat.openai.com/backend-api/conversation) - *Generate Message*
+4. POST : [https://chat.openai.com/backend-api/conversation](https://chat.openai.com/backend-api/conversation) - *Generates text response*
 
- payload :
+ Payload :
+
    ```json
    {
     "action": "next",
     "messages": [
         {
-            "id": "aaa27fdc-adfc-4e97-8383-7be26db9a472",
+            "id": "aaa27fdc-adfc-4e97-8383-7be26db9xxxx",
             "author": {
                 "role": "user"
             },
@@ -85,7 +86,7 @@
             }
         }
     ],
-    "parent_message_id": "aaa1625d-8249-4412-9825-004c3144c609",
+    "parent_message_id": "aaa1625d-8249-4412-9825-004c3144xxxx",
     "model": "text-davinci-002-render-sha",
     "timezone_offset_min": -180,
     "suggestions": [
@@ -106,15 +107,13 @@
    
 5. GET : [https://chat.openai.com/backend-api/conversations?offset=0&limit=28&order=updated](https://chat.openai.com/backend-api/conversations?offset=0&limit=28&order=updated) - *Fetches conversation history* 
 
-Response 
+ Response body :
 
 ```json
 {
     "items": [
-
-        // This first one is auto-generated thus being new
         {
-            "id": "b3779121-8767-4202-9527-3058f40e94e9",
+            "id": "b3779121-8767-4202-9527-3058f40exxxx",
             "title": "Helpful User, Assistant",
             "create_time": "2023-12-15T12:03:30.596706+00:00",
             "update_time": "2023-12-15T12:03:32.675791+00:00",
@@ -126,7 +125,7 @@ Response
             "workspace_id": null
         },
         {
-            "id": "3bec216c-e007-4cb2-8edc-6397e8910238",
+            "id": "3bec216c-e007-4cb2-8edc-6397e89xxxx",
             "title": "Generate ISO 8601 Timestamp",
             "create_time": "2023-12-15T11:21:29.241216+00:00",
             "update_time": "2023-12-15T11:29:04.660939+00:00",
@@ -138,7 +137,7 @@ Response
             "workspace_id": null
         },
         {
-            "id": "e656ee83-acdd-4a0a-aa6e-1c298c5f3404",
+            "id": "e656ee83-acdd-4a0a-aa6e-1c298c5fxxxx",
             "title": "Hello Summary: Keep Short",
             "create_time": "2023-12-15T10:08:41.904885+00:00",
             "update_time": "2023-12-15T10:08:44.315228+00:00",
@@ -156,11 +155,14 @@ Response
     "has_missing_conversations": false
 }
 ```
+
 6. POST : [https://chat.openai.com/backend-api/lat/r](https://chat.openai.com/backend-api/lat/r)
+
   Payload :
+
   ```json
   {
-    "server_request_id": "835f17ad7df465eb-MBA",
+    "server_request_id": "835f17ad7df4xxxx-MBA",
     "model": "text-davinci-002-render-sha",
     "preflight_time_ms": 1,
     "count_tokens": 74,
@@ -178,13 +180,13 @@ Response
 
 7. POST : [	https://chat.openai.com/backend-api/conversation/gen_title/86f73b54-0f51-47ba-84a3-07c1e25dce81](https://chat.openai.com/backend-api/conversation/gen_title/86f73b54-0f51-47ba-84a3-07c1e25dce81) - *Generate title*
 
-Payload 
+ Payload 
 
-```json
-{
+ ```json
+ {
     "message_id":"14588fa1-94fd-43d1-9104-e5b108bd8d7a"
-}
-```
+ }
+ ```
 
 ### On Continuing conversation
 
@@ -225,7 +227,7 @@ Payload
 
 > Then the cycle continues
 
-### Notes:
+### Note:
 
 i. The first payload contains suggestions but continuing lacks.
 

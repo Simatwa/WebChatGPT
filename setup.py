@@ -10,7 +10,7 @@ if not PATH.exists():
             f2.write(f1.read())
 
 setup(
-    name="web-chatgpt",
+    name="webchatgpt",
     version="0.0.1",
     license="GNU v3",
     author="Smartwa",
