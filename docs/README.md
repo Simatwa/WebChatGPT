@@ -1,9 +1,7 @@
 <h1 align="center"> WebChatGPT </h1>
 
 <p align="center">
-
-[Reverse engineered](https://en.wikipedia.org/wiki/Reverse_engineering) ChatGPT in Python.
-
+<a href="https://en.wikipedia.org/wiki/Reverse_engineering">Reverse engineered</a> ChatGPT in Python.
 </p> 
 
 ## Prerequisites
@@ -13,7 +11,7 @@
 - [x] [Http-Tracker](https://github.com/venukbh/http-tracker) extension installed.
 - [x] [export-cookie-for-puppeteer](https://github.com/ktty1220/export-cookie-for-puppeteer) extension installed.
 
-## Installation & usage
+## Installation & Usage
 
 ### Installation
 
@@ -173,9 +171,9 @@ Running `help` while in interactive prompt:
 
 ## ToDo
 
-- [] Stream Response
-- [] Implement Your idea
-- [] Fix my bad code.
+- [ ] Stream Response
+- [ ] Implement Your idea
+- [ ] Fix my bad code.
 
 ## Contributions
 
