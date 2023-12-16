@@ -13,12 +13,13 @@ setup(
     name="web-chatgpt",
     version="0.0.1",
     license="GNU v3",
-    author="Simatwa Caleb",
+    author="Smartwa",
+    maintainer="Smartwa",
     author_email="simatwacaleb@proton.me",
-    description="Reverse Engineered ChatGPT Web-version ",
+    description="Reverse Engineered ChatGPT Web-version",
     packages=["WebChatGPT"],
     url="https://github.com/Simatwa/ChatGPT-Web",
-    project_urls={"Bug Report": "https://github.com/Simatwa/ChatGPT-Web/issues/new"},
+    project_urls={"Bug Report": "https://github.com/Simatwa/WebChatGPT/issues/new"},
     entry_points={
         "console_scripts": [
             "webchatgpt = WebChatGPT.console:main",
@@ -27,14 +28,28 @@ setup(
     install_requires=[
         "requests==2.28.2",
         "python-dotenv==1.0.0",
-        "rich",
+        "click==8.1.3",
+        "rich==13.3.4",
+    ],
+    python_requires=">=3.10",
+    keywords=[
+        "chatgpt",
+        "webchatgpt",
+        "gpt",
     ],
     long_description=Path.open(PATH, encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     classifiers=[
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Intended Audience :: Developers",
+        "Intended Audience :: Developers",
+        "Natural Language :: English",
+        "License :: Free For Home Use",
+        "Intended Audience :: Customer Service",
+        "Programming Language :: Python",
+        "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
+        "Programming Language :: Python :: 3 :: Only"
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11"
         "Programming Language :: Python :: 3.12",
