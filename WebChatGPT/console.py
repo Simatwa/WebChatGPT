@@ -137,7 +137,7 @@ def chat():
     "--auth",
     help="OpenAI's authorization value",
     envvar="openai_authorization",
-    default=from_env('openai_authorization')
+    default=from_env('openai_authorization'),
     prompt="Enter authorization value for `chat.openai.com`",
 )
 @click.option(
