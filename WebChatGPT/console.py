@@ -13,7 +13,16 @@ from time import sleep
 import logging
 import dotenv
 from threading import Thread as thr
-from . import __repo__, __version__, __author__, __info__, getExc
+from . import __repo__, __version__, __author__, __info__
+from .utils import error_handler
+
+getExc = lambda e: e.args[1] if len(e.args) > 1 else str(e)
+
+logging.basicConfig(
+    format="%(levelname)s - %(message)s : (%(asctime)s) ",  # [%(module)s,%(lineno)s]", # for debug purposes
+    datefmt="%H:%M:%S",
+    level=logging.INFO,
+)
 class busy_bar:
     querying = None
     __spinner = (("-", "\\", "|", "/"), ("█■■■■", "■█■■■", "■■█■■", "■■■█■", "■■■■█"))
@@ -214,7 +223,7 @@ def generate(auth, cookie_path, model, index, prompt):
 
     rich.print(Markdown(content))
 
-
+@error_handler(exit_on_error=True)
 def main():
     dotenv.load_dotenv()
     rich.print(

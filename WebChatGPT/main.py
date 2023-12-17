@@ -2,11 +2,8 @@
 import requests
 from WebChatGPT import utils
 import logging
-
-# from common_requests import request_headers, request_payload, request_cookies
 import json
 import re
-
 
 class ChatGPT:
     def __init__(
@@ -58,8 +55,7 @@ class ChatGPT:
         self.last_response_metadata = {}
 
     def __generate_payload(self, prompt: str) -> dict:
-        resp = utils.generate_payload(self, prompt)
-        return resp
+        return utils.generate_payload(self, prompt)
 
     def ask(self, prompt: str, stream: bool = False) -> dict:
         """Chat with ChatGPT
@@ -437,5 +433,4 @@ class ChatGPT:
             self.title_generation_endpoint % {"conversation_id": conversation_id},
             json={"message_id": message_id},
         )
-        resp = utils.is_json(resp, "title")
-        return resp
+        return utils.is_json(resp, "title")

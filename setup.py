@@ -2,6 +2,7 @@ from pathlib import Path
 
 from setuptools import setup
 
+
 DOCS_PATH = Path(__file__).parents[0] / "docs/README.md"
 PATH = Path("README.md")
 if not PATH.exists():
@@ -11,7 +12,7 @@ if not PATH.exists():
 
 setup(
     name="webchatgpt",
-    version="0.0.1",
+    version="0.0.2",
     license="GNU v3",
     author="Smartwa",
     maintainer="Smartwa",
