@@ -101,7 +101,7 @@ def current_timestamp():
     return current_time.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
 
-def generate_telemetr(self: object):
+def generate_telemetry_payload(self: object):
     """Generates Telemeries - though not implemented in this sript but it's good to be aware of.
 
     Args:
