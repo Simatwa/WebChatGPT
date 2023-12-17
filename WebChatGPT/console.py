@@ -16,7 +16,7 @@ from threading import Thread as thr
 from . import __repo__, __version__, __author__, __info__, getExc
 
 
-dotenv.find_dotenv(".env")
+dotenv.load_dotenv()
 
 
 class busy_bar:
