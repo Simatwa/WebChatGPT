@@ -4,7 +4,7 @@ On opening new chat, the following http requests are made:
 
 1. GET [https://chat.openai.com/backend-api/prompt_library/?limit=4&offset=0](https://chat.openai.com/backend-api/prompt_library/?limit=4&offset=0) - *Generates Random prompts*
   
-2. POST : [https://chat.openai.com/ces/v1/b](https://chat.openai.com/ces/v1/b) - *Sends telemetrics*
+2. POST : [https://chat.openai.com/ces/v1/b](https://chat.openai.com/ces/v1/b) - *Sends telemetries*
   
  Payload:
 

@@ -3,7 +3,7 @@
 <p align="center">
 <a href="https://github.com/Simatwa/WebChatGPT/actions/workflows/python-test.yml"><img src="https://github.com/Simatwa/WebChatGPT/actions/workflows/python-test.yml/badge.svg" alt="Python Test"/></a>
 <a href="LICENSE"><img alt="License" src="https://img.shields.io/static/v1?logo=GPL&color=Blue&message=GNUv3&label=License"/></a>
-<a href="https://pypi.org/project/webchatgpt"><img alt="PyPi" src="https://img.shields.io/static/v1?logo=pypi&label=Pypi&message=v0.0.1&color=green"/></a>
+<a href="https://pypi.org/project/webchatgpt"><img alt="PyPi" src="https://img.shields.io/static/v1?logo=pypi&label=Pypi&message=v0.0.2&color=green"/></a>
 <a href="https://github.com/psf/black"><img alt="Black" src="https://img.shields.io/static/v1?logo=Black&label=Code-style&message=Black"/></a>
 <a href="#"><img alt="Passing" src="https://img.shields.io/static/v1?logo=Docs&label=Docs&message=Passing&color=green"/></a>
 <a href="#"><img alt="coverage" src="https://img.shields.io/static/v1?logo=Coverage&label=Coverage&message=90%&color=yellowgreen"/></a>
@@ -96,7 +96,7 @@ In order to do that, we will use the [Http-Tracker](https://github.com/venukbh/h
 4. Back to ChatGPT, make a new conversation and then have a chat with it.
 5. Back to Http-Tracker window, locate and click on the url row having `https://chat.openai.com/backend-api/conversation` to toggle a dropdown showing the http requests details. 
 6. On  the *Request Details Table*, locate a Header having key `Authorization` and then copy it's corresponding value without the `Bearer` string and then paste it somewhere.
-7. On your current directory create a [`.env`](https://github.com/Simatwa/WebChatGPT/blob/main/env) file and then save the contents in the format :
+7. On your current directory of your **terminal**,create a [`.env`](https://github.com/Simatwa/WebChatGPT/blob/main/env) file and then save the contents in the format :
 
 ```
 openai_authorization=<authorization_value>
@@ -245,6 +245,8 @@ Consider taking a look at the [flow of events info](https://github.com/Simatwa/W
 ## Special Thanks
 
 - [x] You
+
+To those wishing to use the Official Openai API endpoints + GoogleBard at console environment; purpose to check out [GPT-CLI](https://github.com/Simatwa/GPT-CLI)
 
 ## Disclaimer
 
