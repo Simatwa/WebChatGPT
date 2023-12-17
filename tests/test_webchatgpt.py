@@ -18,6 +18,7 @@ class TestChatGPT(unittest.TestCase):
 
     @unittest.expectedFailure
     def test_chat(self):
+        """Testing chat"""
         self.assertIs(self.bot.chat('hello there'),str)
 
     @unittest.expectedFailure
