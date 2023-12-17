@@ -14,11 +14,6 @@ import logging
 import dotenv
 from threading import Thread as thr
 from . import __repo__, __version__, __author__, __info__, getExc
-
-
-dotenv.load_dotenv()
-
-
 class busy_bar:
     querying = None
     __spinner = (("-", "\\", "|", "/"), ("█■■■■", "■█■■■", "■■█■■", "■■■█■", "■■■■█"))
@@ -221,6 +216,7 @@ def generate(auth, cookie_path, model, index, prompt):
 
 
 def main():
+    dotenv.load_dotenv()
     rich.print(
         Panel(
             f"""

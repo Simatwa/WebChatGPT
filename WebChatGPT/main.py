@@ -185,10 +185,10 @@ class ChatGPT:
         ```json
         {
              "accounts": {
-                  "b8a156d7-9a30-4de3-bf40-4d88782950c1": {
+                  "b8a156d7-9a30-4de3-bf40-4d88782xxxxx": {
                        "account": {
                             "account_user_role": "account-owner",
-                            "account_user_id": "user-IUW2uKHQ6bwv4bdiI8IYtjqA__b8a156d7-9a30-4de3-bf40-4d88782950c1",
+                            "account_user_id": "user-IUW2uKHQ6bwv4bdiI8IYxxxx__b8a156d7-9a30-4de3-bf40-4d887829xxxx",
                             "processor": {
                                  "a001": {
                                       "has_customer_object": false
@@ -200,7 +200,7 @@ class ChatGPT:
                                       "has_transaction_history": false
                                  }
                             },
-                            "account_id": "b8a156d7-9a30-4de3-bf40-4d88782950c1",
+                            "account_id": "b8a156d7-xxxx-4de3-bf40-4d887829xxxx",
                             "organization_id": null,
                             "is_most_recent_expired_subscription_gratis": false,
                             "has_previously_paid_subscription": false,
@@ -326,13 +326,13 @@ class ChatGPT:
            {
             "items": [
                 {
-                    "id": "edb56594",
+                    "id": "edb56xxx",
                     "title": "Design a database schema",
                     "description": "for an online merch store",
                     "prompt": "Design a database schema for an online merch store."
                 },
                 {
-                    "id": "9fa376de",
+                    "id": "9fa37xxx",
                     "title": "Recommend a dish",
                     "description": "to impress a date who's a picky eater",
                     "prompt": "I'm going to cook for my date who claims to be a picky eater. Can you recommend me a dish that's easy to cook?"
