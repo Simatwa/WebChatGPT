@@ -13,11 +13,11 @@ from time import sleep
 import logging
 import dotenv
 from threading import Thread as thr
-from . import __repo__, __version__, getExc
+from . import __repo__, __version__, __author__, __info__, getExc
 
 
 dotenv.find_dotenv(".env")
-from_env = lambda key : os.environ.get(key)
+
 
 class busy_bar:
     querying = None
@@ -75,7 +75,7 @@ class InteractiveChatGPT(cmd.Cmd):
                 f"""
 Greetings {getpass.getuser().capitalize()}.
 
-This is a Reverse Engineered ChatGPT Web-version.
+This is a {__info__}
 
 ╒════╤═════════════╤════════════════════════╕
 │    │ Command     │ Action                 │
@@ -90,7 +90,7 @@ This is a Reverse Engineered ChatGPT Web-version.
 ╘════╧═════════════╧════════════════════════╛
 
 
-Submit any bug at : https://github.com/Simatwa/WebChatGPT/issues/new
+Submit any bug at : {__repo__}/issues/new
 
 Have some fun!
 """,
@@ -119,7 +119,7 @@ Have some fun!
             except (KeyboardInterrupt, EOFError):
                 busy_bar.stop_spinning()
                 print("")
-                return False
+                return False  # Exit cmd
 
             except Exception as e:
                 logging.error(getExc(e))
@@ -127,7 +127,7 @@ Have some fun!
 
 @click.group("chat")
 def chat():
-    """Reverse Engineered ChatGPT Web-version"""
+    """Reverse Engineered ChatGPT Web-Version"""
     pass
 
 
@@ -137,7 +137,6 @@ def chat():
     "--auth",
     help="OpenAI's authorization value",
     envvar="openai_authorization",
-    default=from_env('openai_authorization'),
     prompt="Enter authorization value for `chat.openai.com`",
 )
 @click.option(
@@ -147,7 +146,6 @@ def chat():
     help="Path to .json file containing cookies for `chat.openai.com`",
     prompt="Enter path to .json file containing cookies for `chat.openai.com`",
     envvar="openai_cookie_file",
-    default=from_env('openai_cookie_file')
 )
 @click.option(
     "-M",
@@ -225,11 +223,11 @@ def generate(auth, cookie_path, model, index, prompt):
 def main():
     rich.print(
         Panel(
-            """
-  Repo : https://github.com/Simatwa/WebChatGPT
-  By : Smartwa
+            f"""
+  Repo : {__repo__}
+  By : {__author__}
           """,
-            title="WebChatGPT v0.0.1",
+            title=f"WebChatGPT v{__version__}",
             style=Style(
                 color="cyan",
                 frame=True,

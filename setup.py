@@ -16,7 +16,7 @@ setup(
     author="Smartwa",
     maintainer="Smartwa",
     author_email="simatwacaleb@proton.me",
-    description="Reverse Engineered ChatGPT Web-version",
+    description="Reverse Engineered ChatGPT Web-Version",
     packages=["WebChatGPT"],
     url="https://github.com/Simatwa/WebChatGPT",
     project_urls={"Bug Report": "https://github.com/Simatwa/WebChatGPT/issues/new"},
@@ -49,9 +49,9 @@ setup(
         "Programming Language :: Python",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
-        "Programming Language :: Python :: 3 :: Only"
+        "Programming Language :: Python :: 3 :: Only",
         "Programming Language :: Python :: 3.10",
-        "Programming Language :: Python :: 3.11"
+        "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
     ],
 )

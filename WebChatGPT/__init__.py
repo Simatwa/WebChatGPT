@@ -10,7 +10,7 @@ __info__ = "Reverse Engineered ChatGPT Web-version."
 import logging
 
 logging.basicConfig(
-    format="%(levelname)s - %(message)s - (%(asctime)s) ",  # [%(module)s,%(lineno)s]",
+    format="%(levelname)s - %(message)s : (%(asctime)s) ",  # [%(module)s,%(lineno)s]", # for debug purposes
     datefmt="%H:%M:%S",
     level=logging.INFO,
 )

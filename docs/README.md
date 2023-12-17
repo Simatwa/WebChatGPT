@@ -173,9 +173,9 @@ Running `help` while in interactive prompt:
 
 ## ToDo
 
-- [] Stream Response
-- [] Implement Your idea
-- [] Fix my bad code.
+- [ ] Stream Response
+- [ ] Implement Your idea
+- [ ] Fix my bad code.
 
 ## Contributions
 

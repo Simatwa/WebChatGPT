@@ -101,8 +101,8 @@ def current_timestamp():
     return current_time.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
 
 
-def generate_init_payload(self: object):
-    """Creates payload for creating new conversation
+def generate_telemetr(self: object):
+    """Generates Telemeries - though not implemented in this sript but it's good to be aware of.
 
     Args:
         self (object): ChatGPT class
@@ -137,7 +137,7 @@ def generate_init_payload(self: object):
                     "locale": f"{self.locale}",
                     "library": {"name": "analytics.js", "version": "npm:next-1.56.0"},
                 },
-                # "messageId": "ajs-next-3154852a6626ae6a48a031e2506fe59d",
+                # "messageId": "ajs-next-3154852a6626ae6a48a031e2506fexxx",
                 # 1a50c897d53bfb315eb7270979e9726e
                 "_metadata": {
                     "bundled": ["Segment.io"],
@@ -151,7 +151,7 @@ def generate_init_payload(self: object):
 
 
 def generate_payload(self: object, prompt: str) -> dict:
-    """Creates payload
+    """Creates conversation payload
 
     Args:
         self (object): _

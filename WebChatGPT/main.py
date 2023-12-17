@@ -15,14 +15,18 @@ class ChatGPT:
         cookie_path: str,
         model: str = "text-davinci-002-render-sha",
         conversation_index: int = 0,
+        locale: str = "en-US",
+        user_agent: str = "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0",
     ):
-        """Initialize ChatGPT
+        """Initializes ChatGPT
 
         Args:
             authorization (str): OpenAI's authorization value
             cookie_path (str): Path to `.json` file containing `chat.openai.com` cookies
             model (str, optional): ChatGPT text generation model name. Defaults to "text-davinci-002-render-sha".
             conversation_index (int, optional): Conversation index to pick up conversation from. Defaults to 0.
+            locale (str, optional): Your locale. Defaults to en-US
+            user_agent (str, optional): Http request header User-Agent. Defaults to Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
         """
         self.session = requests.Session()
         self.session.headers.update(utils.get_request_headers(authorization))
@@ -31,7 +35,9 @@ class ChatGPT:
         self.account_detail_endpoint = (
             "https://chat.openai.com/backend-api/accounts/check"
         )
-        self.account_details_endpoint = self.account_detail_endpoint + "/v4-2023-04-27"
+        self.account_details_endpoint = (
+            self.account_detail_endpoint + "/v4-2023-04-27"
+        )  # update the date as frequent as possible
         self.prompt_library_endpoint = (
             "https://chat.openai.com/backend-api/prompt_library/"
         )
@@ -45,6 +51,8 @@ class ChatGPT:
         self.conversation_metadata = self.previous_conversations(
             index=conversation_index
         )
+        self.session.headers["User-Agent"] = user_agent
+        self.locale = locale
         self.model = model
         self.last_response = {}
         self.last_response_metadata = {}
@@ -156,7 +164,7 @@ class ChatGPT:
             str: Text response generated
 
         Yields:
-            Iterator[str]: Text response generated
+            Iterator[str]: Text response generated (Not currently implemented)
         """
         resp = self.ask(prompt, stream)
         if isinstance(resp, dict):
@@ -416,14 +424,14 @@ class ChatGPT:
             )
 
     def generate_title(self, conversation_id: str, message_id: str) -> dict:
-        """Generate response for a particular conversation message
+        """Generates title for a particular conversation message
 
         Args:
             conversation_id (str): ``
             message_id (str): ``
 
         Returns:
-            dict: ``
+            dict: `{}`
         """
         resp = self.session.post(
             self.title_generation_endpoint % {"conversation_id": conversation_id},
