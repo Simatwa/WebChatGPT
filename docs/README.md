@@ -32,12 +32,6 @@ print(response)
 
 <details>
 
-<summary>
-
-In terminal:
-
-</summary>
-
 ```
 $ python -m WebChatGPT interactive                        
 ╭────────────────────────────── WebChatGPT v0.0.1 ──────────────────────────────╮
@@ -51,6 +45,12 @@ $ python -m WebChatGPT interactive
 General Kenobi! You've activated my nostalgia circuits. What can I do for you    
 today?  
 ```
+
+<summary>
+
+In terminal:
+
+</summary>
 
 </details>
 
