@@ -56,7 +56,6 @@ class busy_bar:
         except Exception as e:
             cls.querying = False
             logging.debug(getExc(e))
-        finally:
             t1.join()
 
     @classmethod
@@ -94,9 +93,9 @@ class InteractiveChatGPT(cmd.Cmd):
         f"┌─[{getpass.getuser().capitalize()}@WebChatGPT]({__version__})\r\n└──╼ ❯❯❯"
     )
 
-    def __init__(self, auth, cookie_path, model, index, *args, **kwargs):
+    def __init__(self, auth, cookie_path, model, index, timeout, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.bot = ChatGPT(auth, cookie_path, model, index)
+        self.bot = ChatGPT(auth, cookie_path, model, index, timeout=timeout)
 
     def do_help(self, text):
         """Echoes useful help info
@@ -146,7 +145,10 @@ Have some fun!
                 busy_bar.start_spinning()
                 generated_response = self.bot.chat(line)
                 busy_bar.stop_spinning()
-                rich.print(Markdown(generated_response))
+                if self.prettify:
+                    rich.print(Markdown(generated_response))
+                else:
+                    click.secho(generated_response)
 
             except (KeyboardInterrupt, EOFError):
                 busy_bar.stop_spinning()
@@ -191,6 +193,13 @@ def chat():
     "-I", "--index", help="Conversation index to resume from", type=click.INT, default=0
 )
 @click.option(
+    "-T",
+    "--timeout",
+    help="Http request timeout",
+    type=click.INT,
+    default=30,
+)
+@click.option(
     "-P",
     "--prompt",
     help="Start conversation with this messsage",
@@ -203,11 +212,15 @@ def chat():
     default=1,
     envvar="busy_bar_index",
 )
-def interactive(auth, cookie_path, model, index, prompt, busy_bar_index):
+@click.option("--prettify/--raw", default=True, help="Prettify the markdowned response")
+def interactive(
+    auth, cookie_path, model, index, timeout, prompt, busy_bar_index, prettify
+):
     """Chat with ChatGPT interactively"""
     assert isinstance(busy_bar_index, int), "Index must be an integer only"
     busy_bar.spin_index = busy_bar_index
-    bot = InteractiveChatGPT(auth, cookie_path, model, index)
+    bot = InteractiveChatGPT(auth, cookie_path, model, index, timeout)
+    bot.prettify = prettify
     if prompt:
         bot.default(prompt)
     bot.cmdloop()
@@ -240,17 +253,28 @@ def interactive(auth, cookie_path, model, index, prompt, busy_bar_index):
     "-I", "--index", help="Conversation index to resume from", type=click.INT, default=0
 )
 @click.option(
+    "-T",
+    "--timeout",
+    help="Http request timeout",
+    type=click.INT,
+    default=30,
+)
+@click.option(
     "-P",
     "--prompt",
     help="Start conversation with this messsage",
     prompt="Enter message",
 )
-def generate(auth, cookie_path, model, index, prompt):
+@click.option("--prettify/--raw", default=True, help="Prettify the markdowned response")
+def generate(auth, cookie_path, model, index, timeout, prompt, prettify):
     """Generate a quick response with ChatGPT"""
 
-    content = ChatGPT(auth, cookie_path, model, index).chat(prompt)
+    content = ChatGPT(auth, cookie_path, model, index, timeout=timeout).chat(prompt)
 
-    rich.print(Markdown(content))
+    if prettify:
+        rich.print(Markdown(content))
+    else:
+        click.secho(content)
 
 
 @error_handler(exit_on_error=True)

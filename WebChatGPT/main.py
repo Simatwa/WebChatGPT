@@ -15,18 +15,22 @@ class ChatGPT:
         conversation_index: int = 0,
         locale: str = "en-US",
         user_agent: str = "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0",
+        timeout: tuple = 30,
     ):
         """Initializes ChatGPT
 
         Args:
             authorization (str): OpenAI's authorization value
             cookie_path (str): Path to `.json` file containing `chat.openai.com` cookies
-            model (str, optional): ChatGPT text generation model name. Defaults to "text-davinci-002-render-sha".
-            conversation_index (int, optional): Conversation index to pick up conversation from. Defaults to 0.
-            locale (str, optional): Your locale. Defaults to en-US
-            user_agent (str, optional): Http request header User-Agent. Defaults to Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0
+            model (str, optional): ChatGPT text generation model name. Defaults to `text-davinci-002-render-sha`.
+            conversation_index (int, optional): Conversation index to pick up conversation from. Defaults to `0`.
+            locale (str, optional): Your locale. Defaults to `en-US`
+            user_agent (str, optional): Http request header User-Agent. Defaults to `Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0`
+            timeout (int, optional): Http request timeout.
+
         """
         self.session = requests.Session()
+        self.timeout = timeout
         self.session.headers.update(utils.get_request_headers(authorization))
         self.session.cookies.update(utils.get_cookies(cookie_path))
         self.conversation_endpoint = "https://chat.openai.com/backend-api/conversation"
@@ -107,7 +111,9 @@ class ChatGPT:
         ```
         """
         response = self.session.post(
-            url=self.conversation_endpoint, json=self.__generate_payload(prompt)
+            url=self.conversation_endpoint,
+            json=self.__generate_payload(prompt),
+            timeout=self.timeout,
         )
         if (
             response.ok
@@ -306,7 +312,8 @@ class ChatGPT:
         resp = self.session.get(
             self.account_details_endpoint
             if in_details
-            else self.account_detail_endpoint
+            else self.account_detail_endpoint,
+            timeout=self.timeout,
         )
         return utils.is_json(resp, "account data")
 
@@ -345,6 +352,7 @@ class ChatGPT:
         resp = self.session.get(
             self.prompt_library_endpoint,
             params={"limit": limit, "offset": offset},
+            timeout=self.timeout,
         )
         return utils.is_json(resp, "prompts")
 
@@ -407,6 +415,7 @@ class ChatGPT:
         resp = self.session.get(
             self.previous_conversations_endpoint,
             params={"limit": limit, "offset": offset, "order": order},
+            timeout=self.timeout,
         )
         resp = utils.is_json(resp, "conversation history")
         if all:
@@ -433,5 +442,6 @@ class ChatGPT:
         resp = self.session.post(
             self.title_generation_endpoint % {"conversation_id": conversation_id},
             json={"message_id": message_id},
+            timeout=self.timeout,
         )
         return utils.is_json(resp, "title")

@@ -7,3 +7,4 @@ Initial Release
 **Whats New?**
 
 - General code improvement
+- Request timeout - 30
