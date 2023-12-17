@@ -5,6 +5,7 @@ import logging
 import json
 import re
 
+
 class ChatGPT:
     def __init__(
         self,

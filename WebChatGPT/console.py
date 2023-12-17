@@ -19,10 +19,12 @@ from .utils import error_handler
 getExc = lambda e: e.args[1] if len(e.args) > 1 else str(e)
 
 logging.basicConfig(
-    format="%(levelname)s - %(message)s : (%(asctime)s) ",  # [%(module)s,%(lineno)s]", # for debug purposes
+    format="%(asctime)s - %(levelname)s : %(message)s ",  # [%(module)s,%(lineno)s]", # for debug purposes
     datefmt="%H:%M:%S",
     level=logging.INFO,
 )
+
+
 class busy_bar:
     querying = None
     __spinner = (("-", "\\", "|", "/"), ("█■■■■", "■█■■■", "■■█■■", "■■■█■", "■■■■█"))
@@ -54,6 +56,8 @@ class busy_bar:
         except Exception as e:
             cls.querying = False
             logging.debug(getExc(e))
+        finally:
+            t1.join()
 
     @classmethod
     def stop_spinning(cls):
@@ -62,9 +66,33 @@ class busy_bar:
             cls.querying = False
             sleep(cls.sleep_time)
 
+    @classmethod
+    def run(cls):
+        """"""
+
+        def decorator(func):
+            def main(*args, **kwargs):
+                try:
+                    return func(*args, **kwargs)
+                except KeyboardInterrupt:
+                    cls.stop_spinning()
+                    return
+                except EOFError:
+                    cls.querying = False
+                    exit(logging.info("Stopping program"))
+                except Exception as e:
+                    cls.stop_spinning()
+                    logging.error(getExc(e))
+
+            return main
+
+        return decorator
+
 
 class InteractiveChatGPT(cmd.Cmd):
-    prompt = f"┌─[{getpass.getuser().capitalize()}@WebChatGPT](v0.0.1)\r\n└──╼ ❯❯❯"
+    prompt = (
+        f"┌─[{getpass.getuser().capitalize()}@WebChatGPT]({__version__})\r\n└──╼ ❯❯❯"
+    )
 
     def __init__(self, auth, cookie_path, model, index, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -126,6 +154,7 @@ Have some fun!
                 return False  # Exit cmd
 
             except Exception as e:
+                busy_bar.stop_spinning()
                 logging.error(getExc(e))
 
 
@@ -223,9 +252,10 @@ def generate(auth, cookie_path, model, index, prompt):
 
     rich.print(Markdown(content))
 
+
 @error_handler(exit_on_error=True)
 def main():
-    dotenv.load_dotenv()
+    dotenv.load_dotenv(os.path.join(os.getcwd(), ".env"))
     rich.print(
         Panel(
             f"""

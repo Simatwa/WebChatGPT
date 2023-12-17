@@ -1,8 +1,58 @@
 <h1 align="center"> WebChatGPT </h1>
 
 <p align="center">
+<a href="https://github.com/Simatwa/WebChatGPT/actions/workflows/python-test.yml"><img src="https://github.com/Simatwa/WebChatGPT/actions/workflows/python-test.yml/badge.svg" alt="Python Test"/></a>
+<a href="LICENSE"><img alt="License" src="https://img.shields.io/static/v1?logo=GPL&color=Blue&message=GNUv3&label=License"/></a>
+<a href="https://pypi.org/project/webchatgpt"><img alt="PyPi" src="https://img.shields.io/static/v1?logo=pypi&label=Pypi&message=v0.0.1&color=green"/></a>
+<a href="https://github.com/psf/black"><img alt="Black" src="https://img.shields.io/static/v1?logo=Black&label=Code-style&message=Black"/></a>
+<a href="#"><img alt="Passing" src="https://img.shields.io/static/v1?logo=Docs&label=Docs&message=Passing&color=green"/></a>
+<a href="#"><img alt="coverage" src="https://img.shields.io/static/v1?logo=Coverage&label=Coverage&message=90%&color=yellowgreen"/></a>
+<a href="#" alt="progress"><img alt="Progress" src="https://img.shields.io/static/v1?logo=Progress&label=Progress&message=95%&color=green"/></a>
+<a href="https://pepy.tech/project/webchatgpt"><img src="https://static.pepy.tech/personalized-badge/webchatgpt?period=total&units=international_system&left_color=grey&right_color=orange&left_text=Downloads" alt="Downloads"></a>
+</p>
+
+<p align="center">
 <a href="https://en.wikipedia.org/wiki/Reverse_engineering">Reverse Engineered</a> ChatGPT in Python.
 </p> 
+
+Unlike the [official Openai library](https://github.com/openai/openai-python), this library makes REST-API calls to [ChatGPT](https://chat.openai.com) via the **browser** endpoints. [`No API-KEY required`]
+
+
+```python
+from WebChatGPT import ChatGPT
+bot = ChatGPT(
+    "<openai-OAuth>",
+    "<path-to-openai-cookies.json>"
+)
+response = bot.ask('<Your prompt'>)
+
+print(response)
+#Ouput : What can I do for you today?
+```
+
+<details>
+
+<summary>
+
+In terminal:
+
+</summary>
+
+```
+$ python -m WebChatGPT interactive                        
+╭────────────────────────────── WebChatGPT v0.0.1 ──────────────────────────────╮
+│                                                                               │
+│   Repo : https://github.com/Simatwa/WebChatGPT                                │
+│   By : Smartwa                                                                │
+│                                                                               │
+╰───────────────────────────────────────────────────────────────────────────────╯
+┌─[Smartwa@WebChatGPT](v0.0.1)
+└──╼ ❯❯❯Hello there
+General Kenobi! You've activated my nostalgia circuits. What can I do for you    
+today?  
+```
+
+</details>
 
 ## Prerequisites
 
@@ -53,19 +103,21 @@ openai_authorization=<authorization_value>
 openai_cookie_file=<path-to-cookie-file>
 ```
 
+> **Note** : It is highly recommended to export the variables from your [`.zshrc`](https://github.com/ohmyzsh/ohmyzsh) file.
+
 By doing that you are good to go.
 
 
 - Converse Interactively:
 
 ```
-webchatgpt interactive -P "<your startup prompt though not a must>"
+$ webchatgpt interactive -P "<your startup prompt though not a must>"
 ```
 
 - Have a quick response
 
 ```
-webchatgpt generate -P "<your prompt here>"
+$ webchatgpt generate -P "<your prompt here>"
 ```
 
 <details>
@@ -168,6 +220,10 @@ Running `help` while in interactive prompt:
 
 
 </details>
+
+If `$ webchatgpt` doesn't look cool on you, there's this workaround `python -m WebChatGPT`
+
+## [Developer Documentation](DEVELOPER.md)
 
 ## ToDo
 
