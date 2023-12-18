@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-<a href="https://en.wikipedia.org/wiki/Reverse_engineering">Reverse Engineered</a> ChatGPT in Python.
+<a href="https://en.wikipedia.org/wiki/Reverse_engineering">Reverse Engineering</a> of ChatGPT in Python.
 </p> 
 
 Unlike the [official Openai library](https://github.com/openai/openai-python), this library makes REST-API calls to [ChatGPT](https://chat.openai.com) via the **browser** endpoints. *No API-KEY required*
