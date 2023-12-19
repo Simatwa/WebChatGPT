@@ -10,8 +10,8 @@
 <a href="#" alt="progress"><img alt="Progress" src="https://img.shields.io/static/v1?logo=Progress&label=Progress&message=95%&color=green"/></a>
 <a href="https://pepy.tech/project/webchatgpt"><img src="https://static.pepy.tech/personalized-badge/webchatgpt?period=total&units=international_system&left_color=grey&right_color=orange&left_text=Downloads" alt="Downloads"></a>
 <!--<a href="https://github.com/Simatwa/WebChatGPT/releases"><img src="https://img.shields.io/github/downloads/Simatwa/WebChatGPT/total?label=Downloads&color=success" alt="Downloads"></img></a> -->
-<a href="https://github.com/Simatwa/WebChatGPT/releases"><img src="https://img.shields.io/github/v/release/Simatwa/WebChatGPT?color=success&label=Github Release" alt="Latest release"></img></a>
-<a href="https://github.com/Simatwa/WebChatGPT/releases"><img src="https://img.shields.io/github/release-date/Simatwa/WebChatGPT?label=Release date" alt="release date"></img></a>
+<a href="https://github.com/Simatwa/WebChatGPT/releases"><img src="https://img.shields.io/github/v/release/Simatwa/WebChatGPT?color=success&label=Release&logo=github" alt="Latest release"></img></a>
+<a href="https://github.com/Simatwa/WebChatGPT/releases"><img src="https://img.shields.io/github/release-date/Simatwa/WebChatGPT?label=Release date&logo=github" alt="release date"></img></a>
 <a href="https://wakatime.com/badge/github/Simatwa/WebChatGPT"><img src="https://wakatime.com/badge/github/Simatwa/WebChatGPT.svg" alt="wakatime"></a>
 </p>
 
