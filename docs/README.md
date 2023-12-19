@@ -9,6 +9,7 @@
 <a href="#"><img alt="coverage" src="https://img.shields.io/static/v1?logo=Coverage&label=Coverage&message=90%&color=yellowgreen"/></a>
 <a href="#" alt="progress"><img alt="Progress" src="https://img.shields.io/static/v1?logo=Progress&label=Progress&message=95%&color=green"/></a>
 <a href="https://pepy.tech/project/webchatgpt"><img src="https://static.pepy.tech/personalized-badge/webchatgpt?period=total&units=international_system&left_color=grey&right_color=orange&left_text=Downloads" alt="Downloads"></a>
+<a href="https://wakatime.com/badge/github/Simatwa/WebChatGPT"><img src="https://wakatime.com/badge/github/Simatwa/WebChatGPT.svg" alt="wakatime"></a>
 </p>
 
 <p align="center">
