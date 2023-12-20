@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 import json
 import logging
 import os
+from uuid import uuid4
 
 headers = request_headers = {
     "Accept": "text/event-stream",
@@ -45,8 +46,8 @@ def error_handler(exit_on_error: bool = False, default=None):
     return decorator  #
 
 
-def get_request_headers(auth: str) -> dict:
-    """Generate Http request headers
+def get_request_headers_and_append_auth(self) -> dict:
+    """Generate Http request headers & append OAuth
 
     Args:
         auth (str): OpenAI's authorization header
@@ -54,8 +55,15 @@ def get_request_headers(auth: str) -> dict:
     Returns:
         dict: Request headers
     """
+    resp = self.session.get(
+        "https://chat.openai.com/api/auth/session",
+        headers=request_headers,
+    )
+    if not resp.ok:
+        raise Exception("Failed to fetch Auth value, supply path to correct cookies.")
+    self.auth = resp.json()
     auth_template = headers["Authorization"]
-    headers["Authorization"] = auth_template % {"value": auth}
+    headers["Authorization"] = auth_template % {"value": self.auth["accessToken"]}
     return headers
 
 
@@ -138,7 +146,6 @@ def generate_telemetry_payload(self: object):
                     "library": {"name": "analytics.js", "version": "npm:next-1.56.0"},
                 },
                 # "messageId": "ajs-next-3154852a6626ae6a48a031e2506fexxx",
-                # 1a50c897d53bfb315eb7270979e9726e
                 "_metadata": {
                     "bundled": ["Segment.io"],
                     "unbundled": [],
@@ -170,17 +177,28 @@ def generate_payload(self: object, prompt: str) -> dict:
                 "metadata": {},
             }
         ],
-        "conversation_id": self.conversation_metadata["id"],
+        # "conversation_id": self.conversation_metadata["id"],
         # "parent_message_id": "5b45a98c-0871-48ed-895b-f36f188cxxxx",
         "model": self.model,
         "timezone_offset_min": -180,
-        "suggestions": [] + self.suggestions,
-        "history_and_training_disabled": False,
+        "suggestions": [],
+        "history_and_training_disabled": self.disable_history_and_training,
         "arkose_token": None,
         "conversation_mode": {"kind": "primary_assistant"},
         "force_paragen": False,
         "force_rate_limit": False,
     }
+    if self.current_conversation_id:
+        # Continuing conversation
+        payload_template["conversation_id"] = self.current_conversation_id
+    else:
+        # Create new conversation
+        payload_template["messages"][0]["id"] = str(uuid4())
+        payload_template["suggestions"] = [
+            prompt["prompt"] for prompt in self.prompt_library()["items"]
+        ]
+
+    # print(json.dumps( payload_template,indent=4,))
     return payload_template
 
 

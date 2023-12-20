@@ -93,9 +93,11 @@ class InteractiveChatGPT(cmd.Cmd):
         f"┌─[{getpass.getuser().capitalize()}@WebChatGPT]({__version__})\r\n└──╼ ❯❯❯"
     )
 
-    def __init__(self, auth, cookie_path, model, index, timeout, *args, **kwargs):
+    def __init__(self, cookie_path, model, index, timeout, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.bot = ChatGPT(auth, cookie_path, model, index, timeout=timeout)
+        self.bot = ChatGPT(
+            cookie_path, model=model, conversation_index=index, timeout=timeout
+        )
 
     def do_help(self, text):
         """Echoes useful help info
@@ -168,13 +170,6 @@ def chat():
 
 @chat.command()
 @click.option(
-    "-A",
-    "--auth",
-    help="OpenAI's authorization value",
-    envvar="openai_authorization",
-    prompt="Enter authorization value for `chat.openai.com`",
-)
-@click.option(
     "-C",
     "--cookie-path",
     type=click.Path(exists=True),
@@ -190,7 +185,7 @@ def chat():
     default="text-davinci-002-render-sha",
 )
 @click.option(
-    "-I", "--index", help="Conversation index to resume from", type=click.INT, default=0
+    "-I", "--index", help="Conversation index to resume from", type=click.INT, default=1
 )
 @click.option(
     "-T",
@@ -213,13 +208,11 @@ def chat():
     envvar="busy_bar_index",
 )
 @click.option("--prettify/--raw", default=True, help="Prettify the markdowned response")
-def interactive(
-    auth, cookie_path, model, index, timeout, prompt, busy_bar_index, prettify
-):
+def interactive(cookie_path, model, index, timeout, prompt, busy_bar_index, prettify):
     """Chat with ChatGPT interactively"""
     assert isinstance(busy_bar_index, int), "Index must be an integer only"
     busy_bar.spin_index = busy_bar_index
-    bot = InteractiveChatGPT(auth, cookie_path, model, index, timeout)
+    bot = InteractiveChatGPT(cookie_path, model, index, timeout)
     bot.prettify = prettify
     if prompt:
         bot.default(prompt)
@@ -227,13 +220,6 @@ def interactive(
 
 
 @chat.command()
-@click.option(
-    "-A",
-    "--auth",
-    help="OpenAI's authorization value",
-    envvar="openai_authorization",
-    prompt="Enter authorization value for `chat.openai.com`",
-)
 @click.option(
     "-C",
     "--cookie-path",
@@ -250,7 +236,7 @@ def interactive(
     default="text-davinci-002-render-sha",
 )
 @click.option(
-    "-I", "--index", help="Conversation index to resume from", type=click.INT, default=0
+    "-I", "--index", help="Conversation index to resume from", type=click.INT, default=1
 )
 @click.option(
     "-T",
@@ -266,10 +252,10 @@ def interactive(
     prompt="Enter message",
 )
 @click.option("--prettify/--raw", default=True, help="Prettify the markdowned response")
-def generate(auth, cookie_path, model, index, timeout, prompt, prettify):
+def generate(cookie_path, model, index, timeout, prompt, prettify):
     """Generate a quick response with ChatGPT"""
 
-    content = ChatGPT(auth, cookie_path, model, index, timeout=timeout).chat(prompt)
+    content = ChatGPT(cookie_path, model, index, timeout=timeout).chat(prompt)
 
     if prettify:
         rich.print(Markdown(content))

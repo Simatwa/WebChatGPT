@@ -25,7 +25,6 @@ Unlike the [official Openai library](https://github.com/openai/openai-python), t
 ```python
 from WebChatGPT import ChatGPT
 bot = ChatGPT(
-    "<openai-OAuth>",
     "<path-to-openai-cookies.json>"
 )
 response = bot.ask('<Your prompt'>)
@@ -62,7 +61,6 @@ In terminal:
 
 - [x] Python>=3.10 Installed
 - [x] Chrome or Firefox browser
-- [x] [Http-Tracker](https://github.com/venukbh/http-tracker) extension installed.
 - [x] [export-cookie-for-puppeteer](https://github.com/ktty1220/export-cookie-for-puppeteer) extension installed.
 
 ## Installation & usage
@@ -89,21 +87,15 @@ pip install .
 
 The script utilizes [HTTP Cookies](https://en.wikipedia.org/wiki/HTTP_cookie) and [OAuth](https://en.wikipedia.org/wiki/OAuth) to justify the REST-API requests at [Openai](https://openai.com). 
 
-In order to do that, we will use the [Http-Tracker](https://github.com/venukbh/http-tracker) extension to harvest the `Oauth` and 
-[export-cookie-for-puppeteer](https://github.com/ktty1220/export-cookie-for-puppeteer) extension to extract the cookies.
+In order to do that, we will use the [export-cookie-for-puppeteer](https://github.com/ktty1220/export-cookie-for-puppeteer) extension to extract the cookies.
 
 ### Procedure
 
 1. Login to https://chat.openai.com
-2. Upon successfull login, use **Export cookie JSON File Puppeteer** to download cookies.
-3. Launch the **Http-Tracker** extension.
-4. Back to ChatGPT, make a new conversation and then have a chat with it.
-5. Back to Http-Tracker window, locate and click on the url row having `https://chat.openai.com/backend-api/conversation` to toggle a dropdown showing the http requests details. 
-6. On  the *Request Details Table*, locate a Header having key `Authorization` and then copy it's corresponding value without the `Bearer` string and then paste it somewhere.
-7. On your current directory of your **terminal**,create a [`.env`](https://github.com/Simatwa/WebChatGPT/blob/main/env) file and then save the contents in the format :
+2. Upon successfull login, use **Export cookie JSON File Puppeteer** to export cookies.
+3. On the current directory of your **terminal**,create a [`.env`](https://github.com/Simatwa/WebChatGPT/blob/main/env) file and save path to the cookie-file in the format :
 
 ```
-openai_authorization=<authorization_value>
 openai_cookie_file=<path-to-cookie-file>
 ```
 
@@ -172,7 +164,6 @@ Usage: webchatgpt generate [OPTIONS]
   Generate a quick response with ChatGPT
 
 Options:
-  -A, --auth TEXT         OpenAI's authorization value
   -C, --cookie-path PATH  Path to .json file containing cookies for
                           `chat.openai.com`
   -M, --model TEXT        ChatGPT's model to be used
@@ -198,7 +189,6 @@ Usage: webchatgpt interactive [OPTIONS]
   Chat with ChatGPT interactively
 
 Options:
-  -A, --auth TEXT                 OpenAI's authorization value
   -C, --cookie-path PATH          Path to .json file containing cookies for
                                   `chat.openai.com`
   -M, --model TEXT                ChatGPT's model to be used

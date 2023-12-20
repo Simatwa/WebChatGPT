@@ -3,7 +3,7 @@
 ```python
 from WebChatGPT import ChatGPT
 bot = ChatGPT(
-    "<openai-OAuth>",
+ 
     "<path-to-openai-cookies.json>"
 )
 print(bot.chat('<Your Prompt>'))
@@ -31,7 +31,6 @@ dotenv.load_dotenv('.env')
 from_env = lambda key: os.environ.get(key)
 
 bot = ChatGPT(
-    from_env('openai_authorization',),
     from_env('openai_cookie_file')
 )
 
@@ -54,7 +53,6 @@ Furtherly, you can retrieve all the response returned in `dict`
 ```python
 from WebChatGPT import ChatGPT
 bot = ChatGPT(
-    "<openai-OAuth>",
     "<path-to-openai-cookies.json>"
 )
 response = bot.ask('<Your prompt'>)
@@ -460,9 +458,39 @@ Output :
 
 </details>
 
+Other attributes include:
+ - Chat History : 
+  ```py
+  bot.chat_history(conversation_id : str)
+  ```
+ - Rename conversation : 
+  ```py
+  bot.rename_conversation(conversation_id :str, title:str)
+  ```
+ - Share conversation : 
+  ```py
+  bot.share_conversation(conversation_id : str )
+  ```
+ - Delete conversation : 
+  ```py
+  delete_conversation(conversation_id: str)
+  ```
+ - Retrieve shared conversations :
+  ```py
+  shared_conversations()
+  ```
+ - Stop sharing conversation : 
+  ```py
+  stop_sharing_conversation(share_id : str)
+  ```
+ - Archive conversation : 
+  ```py
+  archive_conversation(conversation_id : str)
+  ```
+
 For further info, purpose to review the [flow of operations.](operations_flow.md)
 
-> **Note** As at **v0.0.2**, `streaming response` is not implemented. Consider giving it a [PR](https://github.com/Simatwa/WebChatGPT/pulls).
+> **Note** As of **v0.1.0**, `streaming response` is not implemented. Consider giving it a [PR](https://github.com/Simatwa/WebChatGPT/pulls).
 
 <p align="center">
 <a href="https://github.com/Simatwa/WebChatGPT/blob/main/docs/CHANGELOG.md">CHANGELOG</a>
