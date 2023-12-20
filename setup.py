@@ -17,7 +17,7 @@ setup(
     author="Smartwa",
     maintainer="Smartwa",
     author_email="simatwacaleb@proton.me",
-    description="Reverse Engineered ChatGPT Web-Version",
+    description="Reverse Engineering of ChatGPT Web-Version",
     packages=["WebChatGPT"],
     url="https://github.com/Simatwa/WebChatGPT",
     project_urls={"Bug Report": "https://github.com/Simatwa/WebChatGPT/issues/new"},
