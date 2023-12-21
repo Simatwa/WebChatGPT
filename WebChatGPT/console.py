@@ -12,6 +12,8 @@ from .main import ChatGPT
 from time import sleep
 import logging
 import dotenv
+import datetime
+import json
 from threading import Thread as thr
 from . import __repo__, __version__, __author__, __info__
 from .utils import error_handler
@@ -95,8 +97,45 @@ class InteractiveChatGPT(cmd.Cmd):
 
     def __init__(self, cookie_path, model, index, timeout, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.cookie_path = cookie_path
+        self.model = model
+        self.conversation_index = index
+        self.timeout = timeout
         self.bot = ChatGPT(
             cookie_path, model=model, conversation_index=index, timeout=timeout
+        )
+
+    def output_bond(
+        self,
+        title: str,
+        text: str,
+        color: str = "cyan",
+        frame: bool = True,
+        is_json: bool = False,
+    ):
+        """Print prettified output
+
+        Args:
+            title (str): Title
+            text (str): Info to be printed
+            color (str, optional): Output color. Defaults to "cyan".
+            frame (bool, optional): Add frame. Defaults to True.
+        """
+        if is_json:
+            text = f"""
+```json
+{json.dumps(text,indent=4)}
+```
+"""
+        rich.print(
+            Panel(
+                Markdown(text),
+                title=title.title(),
+                style=Style(
+                    color=color,
+                    frame=frame,
+                ),
+            ),
         )
 
     def do_help(self, text):
@@ -110,24 +149,48 @@ Greetings {getpass.getuser().capitalize()}.
 
 This is a {__info__}
 
-╒════╤═════════════╤════════════════════════╕
-│    │ Command     │ Action                 │
-╞════╪═════════════╪════════════════════════╡
-│  0 │ help        │ Show this help info    │
-├────┼─────────────┼────────────────────────┤
-│  1 │ exit        │ Quits Program          │
-├────┼─────────────┼────────────────────────┤
-│  2 │ ./<command> │ Run system command     │
-├────┼─────────────┼────────────────────────┤
-│  3 │ <any other> │ Interacts with ChatGPT │
-╘════╧═════════════╧════════════════════════╛
-
-
+╒════╤════════════════════════╤═════════════════════════════════════╕
+│    │ Command                │ Action                              │
+╞════╪════════════════════════╪═════════════════════════════════════╡
+│  0 │ help                   │ Show this help info                 │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  1 │ history                │ Show conversation history           │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  2 │ share                  │ Share conversation by link          │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  3 │ stop_share             │ Revoke shared conversation link     │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  4 │ rename                 │ Renames conversation title          │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  5 │ archive                │ Archive or unarchive a conversation │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  6 │ shared_conversations   │ Show shared conversations           │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  7 │ previous_conversations │ Show previous conversations         │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  8 │ delete_conversations   │ Delete a particular conversation    │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  9 │ prompts                │ Generate random prompts             │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 10 │ account_info           │ ChatGPT account info/setings        │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 11 │ ask                    │ Show raw response from ChatGPT      │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 12 │ auth                   │ Show current user auth info         │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 13 │ migrate                │ Shift to another conversation       │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 14 │ ./<command>            │ Run system command                  │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 15 │ <any other>            │ Interacts with ChatGPT              │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 16 │ exit                   │ Quits Program                       │
+╘════╧════════════════════════╧═════════════════════════════════════╛
 Submit any bug at : {__repo__}/issues/new
 
 Have some fun!
 """,
-                title="Help info",
+                title="Help Info",
                 style=Style(
                     color="cyan",
                     frame="double",
@@ -135,9 +198,185 @@ Have some fun!
             )
         )
 
+    def do_history(self, line):
+        """Show conversation history"""
+        history = self.bot.chat_history(
+            conversation_id=click.prompt(
+                "Conversation ID", default=self.bot.current_conversation_id
+            )
+        )
+        formatted_chats = []
+        format_datetime = (
+            lambda timestamp: datetime.datetime.fromtimestamp(timestamp)
+            .today()
+            .strftime("%H:%M:%S %d-%b-%Y")
+        )
+
+        for entry in history.get("content"):
+            formatted_chats.append(
+                f"""
+### {entry['author']} (**{format_datetime(entry['create_time'])}**)
+
+{entry['text']}
+"""
+            )
+        self.output_bond(
+            history.get("title"),
+            "\n\n".join(formatted_chats),
+        )
+        if click.confirm("Do you wish to save this"):
+            path = click.prompt(
+                "Enter path to save to", default=history.get("title") + ".json"
+            )
+            with open(path, "w") as fh:
+                json.dump(
+                    history,
+                    fh,
+                    indent=click.prompt(
+                        "Json Indentantion level",
+                        default=4,
+                        type=int,
+                    ),
+                )
+            click.secho(f"Saved successfully to `{path}`")
+
+    def do_share(self, line):
+        """Share a conversation by link"""
+        share_info = self.bot.share_conversation(
+            conversation_id=click.prompt(
+                "Conversation ID", default=self.bot.current_conversation_id
+            ),
+            is_anonymous=click.confirm("Is anonymous", default=True),
+            is_public=click.confirm("Is public", default=True),
+            is_visible=True,
+        )
+        self.output_bond(
+            share_info.get("title"), f"Url : **{share_info.get('share_url')}**"
+        )
+
+    def do_stop_share(self, line):
+        """Revoke shared conversation link"""
+        success_report = self.bot.stop_sharing_conversation(
+            self.bot.share_conversation(
+                conversation_id=click.prompt(
+                    "Conversation ID", default=self.bot.current_conversation_id
+                ),
+            ).get("share_id")
+        )
+        self.output_bond("Success Report", success_report, is_json=True)
+
+    def do_rename(self, line):
+        """Renames conversation title"""
+        new_title = click.prompt("New title", default=line)
+        if click.confirm("Are you sure to change conversation title"):
+            response = self.bot.rename_conversation(
+                conversation_id=click.prompt(
+                    "Conversation ID", default=self.bot.current_conversation_id
+                ),
+                title=new_title,
+            )
+            self.output_bond("Change Convo Title", response, is_json=True)
+        else:
+            click.secho("Conversation title retained", fg="yellow")
+
+    def do_archive(self, line):
+        """Archives or unarchive a conversation"""
+        conversation_id = (
+            click.prompt("Conversation ID", default=self.bot.current_conversation_id),
+        )
+        is_archive = click.confirm(
+            "Is archive",
+            default=True,
+        )
+        if click.confirm("Are you sure to perform this operation"):
+            response = self.bot.archive_conversation(
+                conversation_id,
+                is_archived=is_archive,
+            )
+            self.output_bond("Archive Report", response, is_json=True)
+
+    def do_shared_conversations(self, line):
+        """Shows shared conversations"""
+        shared = self.bot.shared_conversations()
+        self.output_bond("Shared Conversations", shared, is_json=True)
+
+    def do_previous_conversations(self, line):
+        """Shows previous conversations"""
+        previous_convos = self.bot.previous_conversations(
+            limit=click.prompt("Convesation limit", type=int, default=28),
+            offset=click.prompt("Conversation offset", type=int, default=0),
+            all=True,
+        )
+        self.output_bond("Previous Conversations", previous_convos, is_json=True)
+
+    def do_delete_conversations(self, line):
+        """Deletes a particular conversation"""
+        conversation_id = (
+            click.prompt("Conversation ID", default=self.bot.current_conversation_id),
+        )
+        if click.confirm("Are you sure to delete this conversation"):
+            response = self.bot.delete_conversation(
+                conversation_id,
+            )
+            self.output_bond("Deletion Report", response, is_json=True)
+
+    def do_prompts(self, line):
+        """Generate random prompts"""
+        prompts = self.bot.prompt_library(
+            limit=click.prompt("Total prompts", type=int, default=4),
+        )
+        self.output_bond("Random Prompts", prompts, is_json=True)
+
+    def do_account_info(self, line):
+        """Shows information related to current account at ChatGPT"""
+        details = self.bot.user_details(
+            in_details=click.confirm("Show in details", default=True),
+        )
+        self.output_bond("Account Info", details, is_json=True)
+
+    def do_ask(self, line):
+        """Show raw response from ChatGPT"""
+        response = self.bot.ask(
+            prompt=line if bool(line.strip()) else click.prompt("Prompt")
+        )
+        self.output_bond("Raw Response", response, is_json=True)
+
+    def do_auth(self, line):
+        """Show current user auth info"""
+        if click.confirm(
+            "Contents to be displayed contains sensitive data. Are you sure to continue",
+        ):
+            self.output_bond("Current Auth info", self.bot.auth, is_json=True)
+
+    def do_migrate(self, line):
+        """Shift to another conversation"""
+        if click.confirm(
+            "Are you sure to shift to new conversation",
+        ):
+            sort_var = lambda val: val[0] if isinstance(val, tuple) else val
+            self.model = (click.prompt("ChatGPT model", default=sort_var(self.model)),)
+            self.conversation_index = (
+                click.prompt(
+                    "Conversation Index",
+                    default=sort_var(self.conversation_index),
+                ),
+            )
+            self.timeout = (
+                click.prompt(
+                    "Request timeout", type=int, default=sort_var(self.timeout)
+                ),
+            )
+            self.bot = ChatGPT(
+                self.cookie_path,
+                model=sort_var(self.model),
+                conversation_index=sort_var(self.conversation_index),
+                timeout=sort_var(self.timeout),
+            )
+
     def do_exit(self, line):
-        print("Okay Goodbye!")
-        return True
+        if click.confirm("Are you sure to exit"):
+            print("Okay Goodbye!")
+            return True
 
     def default(self, line):
         if line.startswith("./"):
