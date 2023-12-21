@@ -220,7 +220,7 @@ Running `help` while in interactive prompt:
 
 If `$ webchatgpt` doesn't look cool on you, there's this workaround `python -m WebChatGPT`
 
-## [Developer Documentation](DEVELOPER.md)
+## [Developer Documentation](https://github.com/Simatwa/WebChatGPT/blob/main/docs/DEVELOPER.md)
 
 ## ToDo
 
