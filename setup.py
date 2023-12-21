@@ -12,7 +12,7 @@ if not PATH.exists():
 
 setup(
     name="webchatgpt",
-    version="0.1.1",
+    version="0.1.2",
     license="GNU v3",
     author="Smartwa",
     maintainer="Smartwa",
@@ -32,7 +32,7 @@ setup(
         "click==8.1.3",
         "rich==13.3.4",
     ],
-    python_requires=">=3.10",
+    python_requires=">=3.9",
     keywords=[
         "chatgpt",
         "webchatgpt",
