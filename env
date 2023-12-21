@@ -1,3 +1,2 @@
-openai_authorization=<authorization_value>
 openai_cookie_file=<path-to-cookie-file>
 chatgpt_model=<chatgpt-web-model-name>
