@@ -21,3 +21,18 @@ Initial Release
 - Retrieve shared conversations
 - Stop sharing conversation
 - Archive conversation
+
+## v0.1.0
+
+**What's new?**
+More console chat manipulation features.
+ - Chat History 
+ - Rename conversation
+ - Share conversation
+ - Delete conversation
+ - Retrieve shared conversations
+ - Stop sharing conversation
+ - Archive conversation
+ - Export chats in `json`
+ - Generate random prompts
+-  etc
