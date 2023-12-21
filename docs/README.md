@@ -87,19 +87,12 @@ pip install .
 
 The script utilizes [HTTP Cookies](https://en.wikipedia.org/wiki/HTTP_cookie) and [OAuth](https://en.wikipedia.org/wiki/OAuth) to justify the REST-API requests at [Openai](https://openai.com). 
 
-In order to do that, we will use the [export-cookie-for-puppeteer](https://github.com/ktty1220/export-cookie-for-puppeteer) extension to extract the cookies.
+In order to do that, we will use the [export-cookie-for-puppeteer](https://github.com/ktty1220/export-cookie-for-puppeteer) extension to extract the cookies which will later on used to retrieve the OAuth.
 
 ### Procedure
 
 1. Login to https://chat.openai.com
 2. Upon successfull login, use **Export cookie JSON File Puppeteer** to export cookies.
-3. On the current directory of your **terminal**,create a [`.env`](https://github.com/Simatwa/WebChatGPT/blob/main/env) file and save path to the cookie-file in the format :
-
-```
-openai_cookie_file=<path-to-cookie-file>
-```
-
-> **Note** : It is highly recommended to export the variables from your [`.zshrc`](https://github.com/ohmyzsh/ohmyzsh) file.
 
 By doing that you are good to go.
 
@@ -107,14 +100,24 @@ By doing that you are good to go.
 - Converse Interactively:
 
 ```
-$ webchatgpt interactive -P "<your startup prompt though not a must>"
+$ webchatgpt interactive -C <path-to-openai-cookie-file.json> -P "<your startup prompt though not a must>"
 ```
 
 - Have a quick response
 
 ```
-$ webchatgpt generate -P "<your prompt here>"
+$ webchatgpt generate -C <path-to-openai-cookie-file.json> -P "<your prompt here>"
 ```
+
+Alternatives to `-C <path-to-openai-cookie-file.json>` :
+
+On the current directory of your **terminal**,create a [`.env`](https://github.com/Simatwa/WebChatGPT/blob/main/env) file and save path to the cookie-file in the format :
+
+```
+openai_cookie_file=<path-to-cookie-file>
+```
+
+Or simply run `$ webchatgpt <generate/interactive>` and then fill the prompt.
 
 <details>
 
