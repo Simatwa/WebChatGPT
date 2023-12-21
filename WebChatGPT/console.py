@@ -168,7 +168,7 @@ This is a {__info__}
 ├────┼────────────────────────┼─────────────────────────────────────┤
 │  7 │ previous_conversations │ Show previous conversations         │
 ├────┼────────────────────────┼─────────────────────────────────────┤
-│  8 │ delete_conversations   │ Delete a particular conversation    │
+│  8 │ delete_conversation    │ Delete a particular conversation    │
 ├────┼────────────────────────┼─────────────────────────────────────┤
 │  9 │ prompts                │ Generate random prompts             │
 ├────┼────────────────────────┼─────────────────────────────────────┤
@@ -186,6 +186,7 @@ This is a {__info__}
 ├────┼────────────────────────┼─────────────────────────────────────┤
 │ 16 │ exit                   │ Quits Program                       │
 ╘════╧════════════════════════╧═════════════════════════════════════╛
+
 Submit any bug at : {__repo__}/issues/new
 
 Have some fun!
@@ -202,7 +203,9 @@ Have some fun!
         """Show conversation history"""
         history = self.bot.chat_history(
             conversation_id=click.prompt(
-                "Conversation ID", default=self.bot.current_conversation_id
+                "Conversation ID",
+                default=self.bot.current_conversation_id,
+                type=click.STRING,
             )
         )
         formatted_chats = []
@@ -226,7 +229,9 @@ Have some fun!
         )
         if click.confirm("Do you wish to save this"):
             path = click.prompt(
-                "Enter path to save to", default=history.get("title") + ".json"
+                "Enter path to save to",
+                default=history.get("title") + ".json",
+                type=click.STRING,
             )
             with open(path, "w") as fh:
                 json.dump(
@@ -235,7 +240,7 @@ Have some fun!
                     indent=click.prompt(
                         "Json Indentantion level",
                         default=4,
-                        type=int,
+                        type=click.INT,
                     ),
                 )
             click.secho(f"Saved successfully to `{path}`")
@@ -244,7 +249,9 @@ Have some fun!
         """Share a conversation by link"""
         share_info = self.bot.share_conversation(
             conversation_id=click.prompt(
-                "Conversation ID", default=self.bot.current_conversation_id
+                "Conversation ID",
+                default=self.bot.current_conversation_id,
+                type=click.STRING,
             ),
             is_anonymous=click.confirm("Is anonymous", default=True),
             is_public=click.confirm("Is public", default=True),
@@ -259,7 +266,9 @@ Have some fun!
         success_report = self.bot.stop_sharing_conversation(
             self.bot.share_conversation(
                 conversation_id=click.prompt(
-                    "Conversation ID", default=self.bot.current_conversation_id
+                    "Conversation ID",
+                    default=self.bot.current_conversation_id,
+                    type=click.STRING,
                 ),
             ).get("share_id")
         )
@@ -267,11 +276,13 @@ Have some fun!
 
     def do_rename(self, line):
         """Renames conversation title"""
-        new_title = click.prompt("New title", default=line)
+        new_title = click.prompt("New title", default=line, type=click.STRING)
         if click.confirm("Are you sure to change conversation title"):
             response = self.bot.rename_conversation(
                 conversation_id=click.prompt(
-                    "Conversation ID", default=self.bot.current_conversation_id
+                    "Conversation ID",
+                    default=self.bot.current_conversation_id,
+                    type=click.STRING,
                 ),
                 title=new_title,
             )
@@ -281,8 +292,10 @@ Have some fun!
 
     def do_archive(self, line):
         """Archives or unarchive a conversation"""
-        conversation_id = (
-            click.prompt("Conversation ID", default=self.bot.current_conversation_id),
+        conversation_id = click.prompt(
+            "Conversation ID",
+            default=self.bot.current_conversation_id,
+            type=click.STRING,
         )
         is_archive = click.confirm(
             "Is archive",
@@ -303,16 +316,18 @@ Have some fun!
     def do_previous_conversations(self, line):
         """Shows previous conversations"""
         previous_convos = self.bot.previous_conversations(
-            limit=click.prompt("Convesation limit", type=int, default=28),
-            offset=click.prompt("Conversation offset", type=int, default=0),
+            limit=click.prompt("Convesation limit", type=click.INT, default=28),
+            offset=click.prompt("Conversation offset", type=click.INT, default=0),
             all=True,
         )
         self.output_bond("Previous Conversations", previous_convos, is_json=True)
 
-    def do_delete_conversations(self, line):
+    def do_delete_conversation(self, line):
         """Deletes a particular conversation"""
-        conversation_id = (
-            click.prompt("Conversation ID", default=self.bot.current_conversation_id),
+        conversation_id = click.prompt(
+            "Conversation ID",
+            default=self.bot.current_conversation_id,
+            type=click.STRING,
         )
         if click.confirm("Are you sure to delete this conversation"):
             response = self.bot.delete_conversation(
@@ -323,7 +338,7 @@ Have some fun!
     def do_prompts(self, line):
         """Generate random prompts"""
         prompts = self.bot.prompt_library(
-            limit=click.prompt("Total prompts", type=int, default=4),
+            limit=click.prompt("Total prompts", type=click.INT, default=4),
         )
         self.output_bond("Random Prompts", prompts, is_json=True)
 
@@ -337,7 +352,9 @@ Have some fun!
     def do_ask(self, line):
         """Show raw response from ChatGPT"""
         response = self.bot.ask(
-            prompt=line if bool(line.strip()) else click.prompt("Prompt")
+            prompt=line
+            if bool(line.strip())
+            else click.prompt("Prompt", type=click.STRING)
         )
         self.output_bond("Raw Response", response, is_json=True)
 
@@ -353,24 +370,24 @@ Have some fun!
         if click.confirm(
             "Are you sure to shift to new conversation",
         ):
-            sort_var = lambda val: val[0] if isinstance(val, tuple) else val
-            self.model = (click.prompt("ChatGPT model", default=sort_var(self.model)),)
-            self.conversation_index = (
-                click.prompt(
-                    "Conversation Index",
-                    default=sort_var(self.conversation_index),
-                ),
+            self.model = click.prompt(
+                "ChatGPT model", default=self.model, type=click.STRING
             )
-            self.timeout = (
-                click.prompt(
-                    "Request timeout", type=int, default=sort_var(self.timeout)
-                ),
+            self.conversation_index = click.prompt(
+                "Conversation Index",
+                default=self.conversation_index,
+                type=click.INT,
+            )
+            self.timeout = click.prompt(
+                "Request timeout",
+                default=self.timeout,
+                type=click.INT,
             )
             self.bot = ChatGPT(
                 self.cookie_path,
-                model=sort_var(self.model),
-                conversation_index=sort_var(self.conversation_index),
-                timeout=sort_var(self.timeout),
+                model=self.model,
+                conversation_index=self.conversation_index,
+                timeout=self.timeout,
             )
 
     def do_exit(self, line):
