@@ -473,19 +473,19 @@ Other attributes include:
   ```
  - Delete conversation : 
   ```py
-  delete_conversation(conversation_id: str)
+  bot.delete_conversation(conversation_id: str)
   ```
  - Retrieve shared conversations :
   ```py
-  shared_conversations()
+  bot.shared_conversations()
   ```
  - Stop sharing conversation : 
   ```py
-  stop_sharing_conversation(share_id : str)
+  bot.stop_sharing_conversation(share_id : str)
   ```
  - Archive conversation : 
   ```py
-  archive_conversation(conversation_id : str)
+  bot.archive_conversation(conversation_id : str)
   ```
 
 For further info, purpose to review the [flow of operations.](operations_flow.md)
