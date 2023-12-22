@@ -14,6 +14,7 @@ import logging
 import dotenv
 import datetime
 import json
+from functools import wraps
 from threading import Thread as thr
 from . import __repo__, __version__, __author__, __info__
 from .utils import error_handler
@@ -76,6 +77,7 @@ class busy_bar:
         """
 
         def decorator(func):
+            @wraps(func)  # Preserves function metadata
             def main(*args, **kwargs):
                 try:
                     return func(*args, **kwargs)
@@ -95,6 +97,7 @@ class busy_bar:
 
 
 class InteractiveChatGPT(cmd.Cmd):
+    intro = f"Welcome to {__info__} Type help <command> or h for general help info."
     prompt = (
         f"┌─[{getpass.getuser().capitalize()}@WebChatGPT]({__version__})\r\n└──╼ ❯❯❯"
     )
@@ -108,6 +111,7 @@ class InteractiveChatGPT(cmd.Cmd):
         self.bot = ChatGPT(
             cookie_path, model=model, conversation_index=index, timeout=timeout
         )
+        self.user_name = getpass.getuser().capitalize()
 
     def output_bond(
         self,
@@ -142,21 +146,19 @@ class InteractiveChatGPT(cmd.Cmd):
             ),
         )
 
-    def do_help(self, text):
-        """Echoes useful help info
-        text (str): Text passed
-        """
+    def do_h(self, text):
+        """Echoes general help info"""
         rich.print(
             Panel(
                 f"""
-Greetings {getpass.getuser().capitalize()}.
+Greetings {self.user_name}.
 
 This is a {__info__}
 
 ╒════╤════════════════════════╤═════════════════════════════════════╕
 │    │ Command                │ Action                              │
 ╞════╪════════════════════════╪═════════════════════════════════════╡
-│  0 │ help                   │ Show this help info                 │
+│  0 │ h                      │ Show this help info                 │
 ├────┼────────────────────────┼─────────────────────────────────────┤
 │  1 │ history                │ Show conversation history           │
 ├────┼────────────────────────┼─────────────────────────────────────┤
@@ -252,7 +254,7 @@ Have some fun!
 
     @busy_bar.run(help="Ensure conversation ID is correct")
     def do_share(self, line):
-        """Share a conversation by link"""
+        """Share conversation by link"""
         share_info = self.bot.share_conversation(
             conversation_id=click.prompt(
                 "Conversation ID",
@@ -283,7 +285,7 @@ Have some fun!
 
     @busy_bar.run(help="Probably conversation ID is incorrect")
     def do_rename(self, line):
-        """Renames conversation title"""
+        """Rename conversation title"""
         new_title = click.prompt("New title", default=line, type=click.STRING)
         if click.confirm("Are you sure to change conversation title"):
             response = self.bot.rename_conversation(
@@ -300,7 +302,7 @@ Have some fun!
 
     @busy_bar.run(help="Probably conversation ID is incorrect")
     def do_archive(self, line):
-        """Archives or unarchive a conversation"""
+        """Archive or unarchive a conversation"""
         conversation_id = click.prompt(
             "Conversation ID",
             default=self.bot.current_conversation_id,
@@ -319,13 +321,13 @@ Have some fun!
 
     @busy_bar.run()
     def do_shared_conversations(self, line):
-        """Shows shared conversations"""
+        """Show shared conversations"""
         shared = self.bot.shared_conversations()
         self.output_bond("Shared Conversations", shared, is_json=True)
 
     @busy_bar.run()
     def do_previous_conversations(self, line):
-        """Shows previous conversations"""
+        """Show previous conversations"""
         previous_convos = self.bot.previous_conversations(
             limit=click.prompt("Convesation limit", type=click.INT, default=28),
             offset=click.prompt("Conversation offset", type=click.INT, default=0),
@@ -335,7 +337,7 @@ Have some fun!
 
     @busy_bar.run(help="Probably conversation ID is incorrect")
     def do_delete_conversation(self, line):
-        """Deletes a particular conversation"""
+        """Delete a particular conversation"""
         conversation_id = click.prompt(
             "Conversation ID",
             default=self.bot.current_conversation_id,
@@ -357,7 +359,7 @@ Have some fun!
 
     @busy_bar.run()
     def do_account_info(self, line):
-        """Shows information related to current account at ChatGPT"""
+        """Show information related to current account at ChatGPT"""
         details = self.bot.user_details(
             in_details=click.confirm("Show in details", default=True),
         )
@@ -409,12 +411,14 @@ Have some fun!
 
     @busy_bar.run()
     def do_exit(self, line):
+        """Quit this program"""
         if click.confirm("Are you sure to exit"):
             print("Okay Goodbye!")
             return True
 
     # @busy_bar.run()
     def default(self, line):
+        """Chat with ChatGPT"""
         if line.startswith("./"):
             os.system(line[2:])
         else:
