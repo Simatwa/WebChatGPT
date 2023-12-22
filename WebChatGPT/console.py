@@ -68,8 +68,12 @@ class busy_bar:
             sleep(cls.sleep_time)
 
     @classmethod
-    def run(cls):
-        """"""
+    def run(cls, help: str = "Exception"):
+        """Handle function exceptions safely why showing busy bar
+
+        Args:
+            help (str, optional): Message to be shown incase of an exception. Defaults to ''.
+        """
 
         def decorator(func):
             def main(*args, **kwargs):
@@ -83,7 +87,7 @@ class busy_bar:
                     exit(logging.info("Stopping program"))
                 except Exception as e:
                     cls.stop_spinning()
-                    logging.error(getExc(e))
+                    logging.error(f"{help} - {getExc(e)}")
 
             return main
 
@@ -199,6 +203,7 @@ Have some fun!
             )
         )
 
+    @busy_bar.run(help="Ensure conversation ID is correct")
     def do_history(self, line):
         """Show conversation history"""
         history = self.bot.chat_history(
@@ -245,6 +250,7 @@ Have some fun!
                 )
             click.secho(f"Saved successfully to `{path}`")
 
+    @busy_bar.run(help="Ensure conversation ID is correct")
     def do_share(self, line):
         """Share a conversation by link"""
         share_info = self.bot.share_conversation(
@@ -261,6 +267,7 @@ Have some fun!
             share_info.get("title"), f"Url : **{share_info.get('share_url')}**"
         )
 
+    @busy_bar.run(help="Probably conversation ID is incorrect")
     def do_stop_share(self, line):
         """Revoke shared conversation link"""
         success_report = self.bot.stop_sharing_conversation(
@@ -274,6 +281,7 @@ Have some fun!
         )
         self.output_bond("Success Report", success_report, is_json=True)
 
+    @busy_bar.run(help="Probably conversation ID is incorrect")
     def do_rename(self, line):
         """Renames conversation title"""
         new_title = click.prompt("New title", default=line, type=click.STRING)
@@ -290,6 +298,7 @@ Have some fun!
         else:
             click.secho("Conversation title retained", fg="yellow")
 
+    @busy_bar.run(help="Probably conversation ID is incorrect")
     def do_archive(self, line):
         """Archives or unarchive a conversation"""
         conversation_id = click.prompt(
@@ -308,11 +317,13 @@ Have some fun!
             )
             self.output_bond("Archive Report", response, is_json=True)
 
+    @busy_bar.run()
     def do_shared_conversations(self, line):
         """Shows shared conversations"""
         shared = self.bot.shared_conversations()
         self.output_bond("Shared Conversations", shared, is_json=True)
 
+    @busy_bar.run()
     def do_previous_conversations(self, line):
         """Shows previous conversations"""
         previous_convos = self.bot.previous_conversations(
@@ -322,6 +333,7 @@ Have some fun!
         )
         self.output_bond("Previous Conversations", previous_convos, is_json=True)
 
+    @busy_bar.run(help="Probably conversation ID is incorrect")
     def do_delete_conversation(self, line):
         """Deletes a particular conversation"""
         conversation_id = click.prompt(
@@ -335,6 +347,7 @@ Have some fun!
             )
             self.output_bond("Deletion Report", response, is_json=True)
 
+    @busy_bar.run()
     def do_prompts(self, line):
         """Generate random prompts"""
         prompts = self.bot.prompt_library(
@@ -342,6 +355,7 @@ Have some fun!
         )
         self.output_bond("Random Prompts", prompts, is_json=True)
 
+    @busy_bar.run()
     def do_account_info(self, line):
         """Shows information related to current account at ChatGPT"""
         details = self.bot.user_details(
@@ -349,6 +363,7 @@ Have some fun!
         )
         self.output_bond("Account Info", details, is_json=True)
 
+    @busy_bar.run()
     def do_ask(self, line):
         """Show raw response from ChatGPT"""
         response = self.bot.ask(
@@ -358,6 +373,7 @@ Have some fun!
         )
         self.output_bond("Raw Response", response, is_json=True)
 
+    @busy_bar.run()
     def do_auth(self, line):
         """Show current user auth info"""
         if click.confirm(
@@ -365,6 +381,7 @@ Have some fun!
         ):
             self.output_bond("Current Auth info", self.bot.auth, is_json=True)
 
+    @busy_bar.run()
     def do_migrate(self, line):
         """Shift to another conversation"""
         if click.confirm(
@@ -390,11 +407,13 @@ Have some fun!
                 timeout=self.timeout,
             )
 
+    @busy_bar.run()
     def do_exit(self, line):
         if click.confirm("Are you sure to exit"):
             print("Okay Goodbye!")
             return True
 
+    # @busy_bar.run()
     def default(self, line):
         if line.startswith("./"):
             os.system(line[2:])
