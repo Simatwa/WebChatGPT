@@ -202,19 +202,49 @@ Options:
   --help                          Show this message and exit.
 ```
 
-Running `help` while in interactive prompt:
-
-| command | Action |
-| ------- | --------- |
-| help | Show this help info |
-| exit | Quits Program |
-| .`/<command>` | Run system command |
-| `<any other>` | Interacts with ChatGPT |
-
-
-
 </details>
 
+Running `h` while in interactive prompt:
+
+```
+╒════╤════════════════════════╤═════════════════════════════════════╕
+│    │ Command                │ Action                              │
+╞════╪════════════════════════╪═════════════════════════════════════╡
+│  0 │ h                      │ Show this help info                 │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  1 │ history                │ Show conversation history           │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  2 │ share                  │ Share conversation by link          │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  3 │ stop_share             │ Revoke shared conversation link     │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  4 │ rename                 │ Rename conversation title           │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  5 │ archive                │ Archive or unarchive a conversation │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  6 │ shared_conversations   │ Show shared conversations           │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  7 │ previous_conversations │ Show previous conversations         │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  8 │ delete_conversation    │ Delete a particular conversation    │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│  9 │ prompts                │ Generate random prompts             │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 10 │ account_info           │ ChatGPT account info/setings        │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 11 │ ask                    │ Show raw response from ChatGPT      │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 12 │ auth                   │ Show current user auth info         │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 13 │ migrate                │ Shift to another conversation       │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 14 │ ./<command>            │ Run system command                  │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 15 │ <any other>            │ Interact with ChatGPT               │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 16 │ exit                   │ Quits Program                       │
+╘════╧════════════════════════╧═════════════════════════════════════╛
+```
 
 </details>
 
