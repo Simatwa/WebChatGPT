@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-<img width="640" height="360" src="../assets/demo.gif"/>
+<img width="600" height="auto" src="../assets/demo.gif"/>
 </p>
 
 <p align="center">
