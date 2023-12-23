@@ -144,7 +144,7 @@ class busy_bar:
 class InteractiveChatGPT(cmd.Cmd):
     intro = f"Welcome to {__info__} Type help <command> or h for general help info."
     prompt = (
-        f"┌─[{getpass.getuser().capitalize()}@WebChatGPT]({__version__})\r\n└──╼ ❯❯❯"
+        f"┌─[{getpass.getuser().capitalize()}@WebChatGPT](v{__version__})\r\n└──╼ ❯❯❯"
     )
 
     def __init__(self, cookie_path, model, index, timeout, *args, **kwargs):

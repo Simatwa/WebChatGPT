@@ -16,6 +16,10 @@
 </p>
 
 <p align="center">
+<img width="640" height="360" src="../assets/demo.gif"/>
+</p>
+
+<p align="center">
 <a href="https://en.wikipedia.org/wiki/Reverse_engineering">Reverse Engineering</a> of ChatGPT in Python.
 </p> 
 
@@ -48,8 +52,9 @@ $ python -m WebChatGPT interactive
 General Kenobi! You've activated my nostalgia circuits. What can I do for you    
 today?  
 ```
+<!--
 ![View Demo](https://github.com/Simatwa/WebChatGPT/assets/102549052/34e65ee5-a5fc-472d-baaf-762c6f76e403)
-
+-->
 <summary>
 
 In terminal:
