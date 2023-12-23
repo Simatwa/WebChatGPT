@@ -37,32 +37,6 @@ print(response)
 #Ouput : What can I do for you today?
 ```
 
-<details>
-
-```
-$ python -m WebChatGPT interactive                        
-╭────────────────────────────── WebChatGPT v0.0.1 ──────────────────────────────╮
-│                                                                               │
-│   Repo : https://github.com/Simatwa/WebChatGPT                                │
-│   By : Smartwa                                                                │
-│                                                                               │
-╰───────────────────────────────────────────────────────────────────────────────╯
-┌─[Smartwa@WebChatGPT](v0.0.1)
-└──╼ ❯❯❯Hello there
-General Kenobi! You've activated my nostalgia circuits. What can I do for you    
-today?  
-```
-<!--
-![View Demo](https://github.com/Simatwa/WebChatGPT/assets/102549052/34e65ee5-a5fc-472d-baaf-762c6f76e403)
--->
-<summary>
-
-In terminal:
-
-</summary>
-
-</details>
-
 ## Prerequisites
 
 - [x] Python>=3.10 Installed
