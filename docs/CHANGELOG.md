@@ -75,5 +75,6 @@ More console chat manipulation features.
 ## v0.1.6
 
 **What's new?**
-- Support for streaming response
+- Support streaming response
 - Stream response at console - (*default*)
+- Specify stdout font color at console

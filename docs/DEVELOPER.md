@@ -138,6 +138,63 @@ print(message)
 
 </details>
 
+## Streaming Responses
+
+As of version **v0.1.6** Onwards, streaming responses has been added.
+
+### Stream Text Only
+
+```python
+from WebChatGPT import ChatGPT
+
+bot = ChatGPT('<path-to-chat.openai.com.cookies.json>')
+
+response = bot.chat('Okay I get you',stream=True)
+
+for text in response:
+    print(text)
+# Output
+"""
+
+Great
+Great to
+Great to hear
+Great to hear!
+Great to hear! If
+Great to hear! If there
+Great to hear! If there's
+Great to hear! If there's anything
+Great to hear! If there's anything else
+Great to hear! If there's anything else I
+Great to hear! If there's anything else I can
+Great to hear! If there's anything else I can help
+Great to hear! If there's anything else I can help you
+Great to hear! If there's anything else I can help you with ...
+```
+
+### Stream the whole body
+
+```python
+from WebChatGPT import ChatGPT
+
+bot = ChatGPT('<path-to-chat.openai.com.cookies.json>')
+
+response = bot.ask('Okay I get you',stream=True)
+
+for text in response:
+    print(text)
+
+# Output
+"""
+{'message': {'id': '6ad41119-014b-4ef2-bbc2-c7efc53cxxxx', 'author': {'role': 'assistant', 'name': None, 'metadata': {}}, 'create_time': 1703362487.476225, 'update_time': None, 'content': {'content_type': 'text', 'parts': ['']}, 'status': 'in_progress', 'end_turn': None, 'weight': 1.0, 'metadata': {'inline_gizmo_id': None, 'message_type': 'next', 'model_slug': 'text-davinci-002-render-sha', 'parent_id': 'fd46e8a0-a088-46d7-acbd-038e2edxxxxx'}, 'recipient': 'all'}, 'conversation_id': 'fe42a288-6bfa-485d-9da1-ad9120xxxxxxx', 'error': None}
+{'message': {'id': '6ad41119-014b-4ef2-bbc2-c7efc53cxxxx', 'author': {'role': 'assistant', 'name': None, 'metadata': {}}, 'create_time': 1703362487.476225, 'update_time': None, 'content': {'content_type': 'text', 'parts': ['Sounds']}, 'status': 'in_progress', 'end_turn': None, 'weight': 1.0, 'metadata': {'inline_gizmo_id': None, 'message_type': 'next', 'model_slug': 'text-davinci-002-render-sha', 'parent_id': 'fd46e8a0-a088-46d7-acbd-038e2edxxxxx'}, 'recipient': 'all'}, 'conversation_id': 'fe42a288-6bfa-485d-9da1-ad9120xxxxxxx', 'error': None}
+{'message': {'id': '6ad41119-014b-4ef2-bbc2-c7efc53cxxxx', 'author': {'role': 'assistant', 'name': None, 'metadata': {}}, 'create_time': 1703362487.476225, 'update_time': None, 'content': {'content_type': 'text', 'parts': ['Sounds good']}, 'status': 'in_progress', 'end_turn': None, 'weight': 1.0, 'metadata': {'inline_gizmo_id': None, 'message_type': 'next', 'model_slug': 'text-davinci-002-render-sha', 'parent_id': 'fd46e8a0-a088-46d7-acbd-038e2edxxxxx'}, 'recipient': 'all'}, 'conversation_id': 'fe42a288-6bfa-485d-9da1-ad9120xxxxxxx', 'error': None}
+{'message': {'id': '6ad41119-014b-4ef2-bbc2-c7efc53cxxxx', 'author': {'role': 'assistant', 'name': None, 'metadata': {}}, 'create_time': 1703362487.476225, 'update_time': None, 'content': {'content_type': 'text', 'parts': ['Sounds good!']}, 'status': 'in_progress', 'end_turn': None, 'weight': 1.0, 'metadata': {'inline_gizmo_id': None, 'message_type': 'next', 'model_slug': 'text-davinci-002-render-sha', 'parent_id': 'fd46e8a0-a088-46d7-acbd-038e2edxxxxx'}, 'recipient': 'all'}, 'conversation_id': 'fe42a288-6bfa-485d-9da1-ad9120xxxxxxx', 'error': None}
+{'message': {'id': '6ad41119-014b-4ef2-bbc2-c7efc53cxxxx', 'author': {'role': 'assistant', 'name': None, 'metadata': {}}, 'create_time': 1703362487.476225, 'update_time': None, 'content': {'content_type': 'text', 'parts': ['Sounds good! If']}, 'status': 'in_progress', 'end_turn': None, 'weight': 1.0, 'metadata': {'inline_gizmo_id': None, 'message_type': 'next', 'model_slug': 'text-davinci-002-render-sha', 'parent_id': 'fd46e8a0-a088-46d7-acbd-038e2edxxxxx'}, 'recipient': 'all'}, 'conversation_id': 'fe42a288-6bfa-485d-9da1-ad9120xxxxxxx', 'error': None}
+{'message': {'id': '6ad41119-014b-4ef2-bbc2-c7efc53cxxxx', 'author': {'role': 'assistant', 'name': None, 'metadata': {}}, 'create_time': 1703362487.476225, 'update_time': None, 'content': {'content_type': 'text', 'parts': ['Sounds good! If you']}, 'status': 'in_progress', 'end_turn': None, 'weight': 1.0, 'metadata': {'inline_gizmo_id': None, 'message_type': 'next', 'model_slug': 'text-davinci-002-render-sha', 'parent_id': 'fd46e8a0-a088-46d7-acbd-038e2edxxxxx'}, 'recipient': 'all'}, 'conversation_id': 'fe42a288-6bfa-485d-9da1-ad9120xxxxxxx', 'error': None}
+"""
+```
+
 ## Account Details
 
 ### Check in detail
@@ -490,7 +547,9 @@ Other attributes include:
 
 For further info, purpose to review the [flow of operations.](operations_flow.md)
 
+<!--
 > **Note** As of **v0.1.5**, `streaming response` is not implemented. Consider giving it a [PR](https://github.com/Simatwa/WebChatGPT/pulls).
+-->
 
 <p align="center">
 <a href="https://github.com/Simatwa/WebChatGPT/blob/main/docs/CHANGELOG.md">CHANGELOG</a>
