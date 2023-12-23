@@ -3,6 +3,12 @@ import json
 import logging
 import os
 from uuid import uuid4
+from typing import Any
+
+
+__common_error_support_info = "Incase you have no idea on how to get the cookies check the documentation at - \
+    https://github.com/Simatwa/WebChatGPT"
+
 
 headers = request_headers = {
     "Accept": "text/event-stream",
@@ -23,12 +29,16 @@ headers = request_headers = {
 }
 
 
-def error_handler(exit_on_error: bool = False, default=None):
+def error_handler(
+    exit_on_error: bool = False, default: Any = None, info: str = None, raise_err=False
+):
     """Decorator for handling exceptions
 
     Args:
         exit_on_error (bool, optional): ``. Defaults to False.
-        default (_type_, optional): Return this incase of an exception. Defaults to None.
+        default (Any, optional): Return this incase of an exception. Defaults to None.
+        info (str, optional): Message to be shown along with the exception details. Defaults to None.
+        raise_err (bool, optional): Raise exception instead of logging it. Defaults to False.
     """
 
     def decorator(func):
@@ -36,7 +46,15 @@ def error_handler(exit_on_error: bool = False, default=None):
             try:
                 return func(*args, **kwargs)
             except Exception as e:
-                logging.error(e.args[1] if len(e.args) > 1 else str(e))
+                if raise_err:  # Raise exception
+                    if info:
+                        raise Exception(info) from e
+                    else:
+                        raise Exception(e)
+                else:
+                    logging.error(
+                        f"{e.args[1] if len(e.args) > 1 else str(e)} - {info}"
+                    )
                 if exit_on_error:
                     exit(1)
                 return default
@@ -60,16 +78,23 @@ def get_request_headers_and_append_auth(self) -> dict:
         headers=request_headers,
     )
     if not resp.ok:
-        raise Exception("Failed to fetch Auth value, supply path to correct cookies.")
+        raise Exception(
+            "Failed to fetch Auth value, supply path to correct cookies.  "
+            + __common_error_support_info
+        )
     self.auth = resp.json()
     auth_template = headers["Authorization"]
     headers["Authorization"] = auth_template % {"value": self.auth["accessToken"]}
     return headers
 
 
-@error_handler(exit_on_error=True)
+@error_handler(
+    exit_on_error=True,
+    raise_err=True,
+    info=__common_error_support_info,
+)
 def get_cookies(path: str) -> dict:
-    """Reads cookies and format thems
+    """Reads cookies and format them
 
     Args:
         path (str): Path to cookie file
@@ -110,7 +135,7 @@ def current_timestamp():
 
 
 def generate_telemetry_payload(self: object):
-    """Generates Telemeries - though not implemented in this sript but it's good to be aware of.
+    """Generates Telemeries - though not implemented in this script but it's good to be aware of.
 
     Args:
         self (object): ChatGPT class
