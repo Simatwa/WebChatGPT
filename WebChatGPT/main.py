@@ -97,8 +97,7 @@ class ChatGPT:
             self.last_response_metadata[2]["conversation_id"] = id
             return id
 
-    @property
-    def current_message_id(self):
+    def get_current_message_id(self):
         return self.last_response_metadata.get(2).get("message_id")
 
     def ask(
@@ -506,7 +505,13 @@ class ChatGPT:
             json={"message_id": message_id},
             timeout=self.timeout,
         )
-        return utils.is_json(resp, "title")
+        sanitized_resp = utils.is_json(resp, "title")
+        if "message" in sanitized_resp.keys():
+            generated_title = sanitized_resp.get("message")
+            match = re.search(r"'([^']*)'", generated_title)
+            if match:
+                sanitized_resp["message"] = match.group(1)
+        return sanitized_resp
 
     def delete_conversation(self, conversation_id: str) -> dict:
         """Deletes a particular conversation based on ID

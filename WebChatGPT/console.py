@@ -8,6 +8,7 @@ import getpass
 from rich.panel import Panel
 from rich.style import Style
 from rich.markdown import Markdown
+from rich.live import Live
 from .main import ChatGPT
 from time import sleep
 import logging
@@ -19,6 +20,7 @@ from functools import wraps
 from threading import Thread as thr
 from . import __repo__, __version__, __author__, __info__
 from .utils import error_handler
+from typing import Iterator
 
 getExc = lambda e: e.args[1] if len(e.args) > 1 else str(e)
 
@@ -27,6 +29,48 @@ logging.basicConfig(
     datefmt="%H:%M:%S",
     level=logging.INFO,
 )
+
+
+def stream_output(
+    iterable: Iterator,
+    title: str = "",
+    is_markdown: bool = True,
+    style: object = Style(),
+    transient: bool = False,
+    title_generator: object = None,
+    title_generator_params: dict = {},
+) -> None:
+    """Stdout streaming response
+
+    Args:
+        iterable (Iterator): Iterator containing contents to be stdout
+        title (str, optional): Content title. Defaults to ''.
+        is_markdown (bool, optional): Flag for markdown content. Defaults to True.
+        style (object, optional): `rich.style` instance. Defaults to Style().
+        transient (bool, optional): Flag for transient. Defaults to False.
+        title_generator (object, optional): Function for generating title. Defaults to None.
+        title_generator_params (dict, optional): Kwargs for `title_generator` function. Defaults to {}.
+    """
+    render_this = ""
+    with Live(render_this, transient=transient, refresh_per_second=8) as live:
+        for entry in iterable:
+            render_this += entry
+            live.update(
+                Panel(
+                    Markdown(entry) if is_markdown else entry,
+                    title=title,
+                    style=style,
+                )
+            )
+        if title_generator:
+            title = title_generator(**title_generator_params)
+            live.update(
+                Panel(
+                    Markdown(entry) if is_markdown else entry,
+                    title=title,
+                    style=style,
+                )
+            )
 
 
 class busy_bar:
@@ -113,6 +157,9 @@ class InteractiveChatGPT(cmd.Cmd):
             cookie_path, model=model, conversation_index=index, timeout=timeout
         )
         self.user_name = getpass.getuser().capitalize()
+        self.prettify = True
+        self.color = "cyan"
+        self.show_title = False
 
     def output_bond(
         self,
@@ -419,6 +466,16 @@ Have some fun!
             print("Okay Goodbye!")
             return True
 
+    def generate_title(self):
+        """Get current conversation title"""
+        resp = self.bot.generate_title(
+            self.bot.current_conversation_id,
+            self.bot.get_current_message_id(),
+        )
+        if "message" in resp:
+            return resp["message"]
+        return "Untitled"
+
     # @busy_bar.run()
     def default(self, line):
         """Chat with ChatGPT"""
@@ -427,12 +484,23 @@ Have some fun!
         else:
             try:
                 busy_bar.start_spinning()
-                generated_response = self.bot.chat(line)
+                generated_response = self.bot.chat(line, stream=True)
                 busy_bar.stop_spinning()
+                stream_output(
+                    generated_response,
+                    title="",
+                    is_markdown=self.prettify,
+                    style=Style(
+                        color=self.color,
+                    ),
+                    title_generator=self.generate_title if self.show_title else None,
+                )
+                """
                 if self.prettify:
                     rich.print(Markdown(generated_response))
                 else:
                     click.secho(generated_response)
+                """
 
             except (KeyboardInterrupt, EOFError):
                 busy_bar.stop_spinning()
@@ -440,6 +508,7 @@ Have some fun!
                 return False  # Exit cmd
 
             except Exception as e:
+                # logging.exception(e)
                 busy_bar.stop_spinning()
                 logging.error(getExc(e))
 
@@ -489,13 +558,31 @@ def chat():
     default=1,
     envvar="busy_bar_index",
 )
+@click.option(
+    "-c", "--color", default=None, help="Font color for printing the contents"
+)
 @click.option("--prettify/--raw", default=True, help="Prettify the markdowned response")
-def interactive(cookie_path, model, index, timeout, prompt, busy_bar_index, prettify):
+@click.option(
+    "--show-title/--no-title", default=False, help="Flag for title generation control"
+)
+def interactive(
+    cookie_path,
+    model,
+    index,
+    timeout,
+    prompt,
+    busy_bar_index,
+    color,
+    prettify,
+    show_title,
+):
     """Chat with ChatGPT interactively"""
     assert isinstance(busy_bar_index, int), "Index must be an integer only"
     busy_bar.spin_index = busy_bar_index
     bot = InteractiveChatGPT(cookie_path, model, index, timeout)
     bot.prettify = prettify
+    bot.color = color
+    bot.show_title = show_title
     if prompt:
         bot.default(prompt)
     bot.cmdloop()
@@ -533,19 +620,27 @@ def interactive(cookie_path, model, index, timeout, prompt, busy_bar_index, pret
     help="Start conversation with this messsage",
     prompt="Enter message",
 )
+@click.option(
+    "-c", "--color", default=None, help="Font color for printing the contents"
+)
 @click.option("--prettify/--raw", default=True, help="Prettify the markdowned response")
-def generate(cookie_path, model, index, timeout, prompt, prettify):
+def generate(cookie_path, model, index, timeout, prompt, color, prettify):
     """Generate a quick response with ChatGPT"""
 
-    content = ChatGPT(cookie_path, model, index, timeout=timeout).chat(
+    bot = ChatGPT(cookie_path, model, index, timeout=timeout)
+    content = bot.chat(
         prompt,
+        stream=True,
     )
-    print(content)
-
-    if prettify:
-        rich.print(Markdown(content))
-    else:
-        click.secho(content)
+    stream_output(
+        content,
+        title="ChatGPT Quick Response",
+        is_markdown=prettify,
+        style=Style(
+            frame=False,
+            color=color,
+        ),
+    )
 
 
 @error_handler(exit_on_error=True)
