@@ -83,6 +83,10 @@ def get_request_headers_and_append_auth(self) -> dict:
             + __common_error_support_info
         )
     self.auth = resp.json()
+    if self.auth.get("error"):
+        raise Exception(
+            "Your cookies have expired, login to `chat.openai.com` and then export new ones."
+        )
     auth_template = headers["Authorization"]
     headers["Authorization"] = auth_template % {"value": self.auth["accessToken"]}
     return headers
