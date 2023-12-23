@@ -92,7 +92,9 @@ In order to do that, we will use the [export-cookie-for-puppeteer](https://githu
 ### Procedure
 
 1. Login to https://chat.openai.com
-2. Upon successfull login, use **Export cookie JSON File Puppeteer** to export cookies.
+2. Upon successfull login, use **Export cookie JSON File Puppeteer** to export cookies. If you haven't installed the extension, here are  the quick installation links for you. 
+ - [Google Chrome](https://chrome.google.com/webstore/detail/nmckokihipjgplolmcmjakknndddifde)
+- [Firefox](https://addons.mozilla.org/ja/firefox/addon/%E3%82%AF%E3%83%83%E3%82%AD%E3%83%BCjson%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E5%87%BA%E5%8A%9B-for-puppeteer/)
 
 By doing that you are good to go.
 
