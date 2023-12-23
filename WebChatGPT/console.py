@@ -14,6 +14,7 @@ import logging
 import dotenv
 import datetime
 import json
+import pyperclip
 from functools import wraps
 from threading import Thread as thr
 from . import __repo__, __version__, __author__, __info__
@@ -265,9 +266,11 @@ Have some fun!
             is_public=click.confirm("Is public", default=True),
             is_visible=True,
         )
-        self.output_bond(
-            share_info.get("title"), f"Url : **{share_info.get('share_url')}**"
-        )
+        url = share_info.get("share_url")
+        self.output_bond(share_info.get("title"), f"Url : **{url}**")
+        if click.confirm("Copy link to clipboard"):
+            pyperclip.copy(url)
+            click.secho("Link copied to clipboard.", fg="green")
 
     @busy_bar.run(help="Probably conversation ID is incorrect")
     def do_stop_share(self, line):
