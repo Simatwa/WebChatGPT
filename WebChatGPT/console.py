@@ -563,7 +563,7 @@ def chat():
 )
 @click.option("--prettify/--raw", default=True, help="Prettify the markdowned response")
 @click.option(
-    "--show-title/--no-title", default=False, help="Flag for title generation control"
+    "--show-title/--no-title", default=True, help="Flag for title generation control"
 )
 def interactive(
     cookie_path,

@@ -95,7 +95,7 @@ def get_request_headers_and_append_auth(self) -> dict:
 @error_handler(
     exit_on_error=True,
     raise_err=True,
-    info="Probably you passed invalid path to cookies or your cookies have expired. "
+    info="Probably you passed invalid path to .json file containing cookies for `chat.openai.com` . "
     + __common_error_support_info,
 )
 def get_cookies(path: str) -> dict:
