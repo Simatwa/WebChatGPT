@@ -71,3 +71,9 @@ More console chat manipulation features.
 
 **What's new?**
 - Exception support info
+
+## v0.1.6
+
+**What's new?**
+- Support for streaming response
+- Stream response at console - (*default*)
