@@ -70,7 +70,10 @@ class ChatGPT:
         self.model = model
         self.disable_history_and_training = disable_history_and_training
         self.last_response = {}
-        self.last_response_metadata = {}
+        self.last_response_metadata = {
+            1: {},
+            2: {},
+        }
         self.__already_init = False
         self.__index = conversation_index
 
@@ -80,7 +83,7 @@ class ChatGPT:
     @property
     def current_conversation_id(self):
         if self.__already_init:
-            return self.last_response_metadata.get("conversation_id")
+            return self.last_response_metadata.get(2).get("conversation_id")
         else:
             self.__already_init = True
             id = (
@@ -91,20 +94,27 @@ class ChatGPT:
                 if self.__index
                 else None
             )  # When index is 0 create new conversation else resume conversation
-            self.last_response_metadata["conversation_id"] = id
+            self.last_response_metadata[2]["conversation_id"] = id
             return id
 
     @property
     def current_message_id(self):
-        return self.last_response_metadata.get("message_id")
+        return self.last_response_metadata.get(2).get("message_id")
 
-    def ask(self, prompt: str, stream: bool = False) -> dict:
+    def ask(
+        self, prompt: str, stream: bool = False
+    ) -> (
+        dict
+    ):  # dict/Iterator but for compatibility with Python 3.9 just `-> dict` is cool
         """Chat with ChatGPT
 
                 Args:
                     prompt (str): message to be send
                     stream (bool, optional): Flag to stream response. Defaults to False.
-                returns : dict {}
+                returns :
+                    dict {}
+                Yields :
+                   Iterator[dict]
         ```json
         {
             "message": {
@@ -150,42 +160,53 @@ class ChatGPT:
             url=self.conversation_endpoint,
             json=self.__generate_payload(prompt),
             timeout=self.timeout,
+            stream=stream,
         )
         if (
             response.ok
             and response.headers.get("content-type")
             == "text/event-stream; charset=utf-8"
         ):
-            for chunk in response.iter_lines(
-                decode_unicode=True,
-            ):
-                # Help me fix this stuff here, to stream response as per requirements
 
-                # if not bool(chunk) or chunk=="data [DONE]":
-                #   continue
-                try:
-                    if not bool(chunk):
-                        continue
-                    resp = json.loads(re.sub("data: ", "", chunk, 1).strip())
-                    # print(resp)
-                    if (
-                        not "message_id" in resp.keys()
-                        and "message" in resp.keys()
-                        and resp["message"]["status"] == "finished_successfully"
-                        and resp["message"]["end_turn"] == True
-                    ):
-                        self.last_response = resp
-                        return resp
-                    elif "message_id" in resp.keys():
-                        self.last_response_metadata = resp
+            def for_stream():
+                for value in response.iter_lines(
+                    decode_unicode=True, delimiter="data:"
+                ):
+                    try:
+                        to_dict = json.loads(value)
+                        if "is_completion" in to_dict.keys():
+                            # Metadata (response)
+                            self.last_response_metadata[
+                                2 if to_dict.get("is_completion") else 1
+                            ] = to_dict
+                            continue
+                        # Only data containing the `feedback body` make it to here
+                        yield to_dict
+                    except json.decoder.JSONDecodeError:
+                        # Caused by either empty string or [DONE]
+                        pass
 
-                    # if stream:
-                    #   # Response to user
-                    #  yield resp
-                except json.decoder.JSONDecodeError as e:
-                    # Could not be that serious
-                    # print(chunk, "ERROR")
-                    pass
+            def for_non_stream():
+                response_to_be_returned = {}
+                for value in response.iter_lines(
+                    decode_unicode=True, delimiter="data:"
+                ):
+                    try:
+                        to_dict = json.loads(value)
+                        if "is_completion" in to_dict.keys():
+                            # Metadata (response)
+                            self.last_response_metadata[
+                                2 if to_dict.get("is_completion") else 1
+                            ] = to_dict
+                            continue
+                        # Only data containing the `feedback body` make it to here
+                        response_to_be_returned.update(to_dict)
+                    except json.decoder.JSONDecodeError:
+                        # Caused by either empty string or [DONE]
+                        pass
+                return response_to_be_returned
+
+            return for_stream() if stream else for_non_stream()
 
         else:
             raise Exception(
@@ -200,10 +221,10 @@ class ChatGPT:
             stream (bool, optional): Yield the text response. Defaults to False.
 
         Returns:
-            str: Text response generated
+            str: Text response generated only
 
         Yields:
-            Iterator[str]: Text response generated (Not currently implemented)
+            Iterator[str]: Text response generated only
         """
         resp = self.ask(prompt, stream)
         if isinstance(resp, dict):
@@ -211,8 +232,8 @@ class ChatGPT:
         else:
             # streaming response
             for response in resp:
-                pass  #  To be fixed
-                # yield utils.get_message(response)
+                yield utils.get_message(response)
+                # pass  Currently fixed
 
     def user_details(self, in_details: bool = True) -> dict:
         """Returns various information concerning the user

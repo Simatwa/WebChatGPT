@@ -91,7 +91,8 @@ def get_request_headers_and_append_auth(self) -> dict:
 @error_handler(
     exit_on_error=True,
     raise_err=True,
-    info="Probably you passed invalid path to cookies. "+__common_error_support_info,
+    info="Probably you passed invalid path to cookies or your cookies have expired. "
+    + __common_error_support_info,
 )
 def get_cookies(path: str) -> dict:
     """Reads cookies and format them
@@ -236,5 +237,6 @@ def get_message(response: dict) -> str:
     Returns:
         str: Extracted message
     """
+    # print(json.dumps(response,indent=4))
     assert isinstance(response, dict), "'response' should be of 'dict' data-type"
     return response["message"]["content"]["parts"][0]
