@@ -78,9 +78,7 @@ Either of the following ways will get you ready :
 2. From source
 
 ```
-git clone https://github.com/Simatwa/WebChatGPT.git
-cd WebChatGPT
-pip install .
+pip install git+https://github.com/Simatwa/WebChatGPT.git
 ```
 
 ## Usage
