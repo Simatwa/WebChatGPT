@@ -490,7 +490,7 @@ Other attributes include:
 
 For further info, purpose to review the [flow of operations.](operations_flow.md)
 
-> **Note** As of **v0.1.4**, `streaming response` is not implemented. Consider giving it a [PR](https://github.com/Simatwa/WebChatGPT/pulls).
+> **Note** As of **v0.1.5**, `streaming response` is not implemented. Consider giving it a [PR](https://github.com/Simatwa/WebChatGPT/pulls).
 
 <p align="center">
 <a href="https://github.com/Simatwa/WebChatGPT/blob/main/docs/CHANGELOG.md">CHANGELOG</a>

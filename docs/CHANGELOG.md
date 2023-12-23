@@ -66,3 +66,8 @@ More console chat manipulation features.
 
 **What's new?**
 - Exceptions safely handled at console.
+
+## v0.1.5
+
+**What's new?**
+- Exception support info
