@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-<img width="600" height="auto" src="../assets/demo.gif"/>
+<img width="600" height="auto" src="https://github.com/Simatwa/WebChatGPT/blob/main/assets/demo.gif?raw=true"/>
 </p>
 
 <p align="center">
