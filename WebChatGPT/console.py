@@ -537,7 +537,10 @@ def interactive(cookie_path, model, index, timeout, prompt, busy_bar_index, pret
 def generate(cookie_path, model, index, timeout, prompt, prettify):
     """Generate a quick response with ChatGPT"""
 
-    content = ChatGPT(cookie_path, model, index, timeout=timeout).chat(prompt)
+    content = ChatGPT(cookie_path, model, index, timeout=timeout).chat(
+        prompt,
+    )
+    print(content)
 
     if prettify:
         rich.print(Markdown(content))

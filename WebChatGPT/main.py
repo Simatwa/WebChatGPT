@@ -227,13 +227,17 @@ class ChatGPT:
             Iterator[str]: Text response generated only
         """
         resp = self.ask(prompt, stream)
-        if isinstance(resp, dict):
-            return utils.get_message(resp)
-        else:
+
+        def for_stream():
             # streaming response
             for response in resp:
                 yield utils.get_message(response)
                 # pass  Currently fixed
+
+        def for_non_stream():
+            return utils.get_message(resp)
+
+        return for_stream() if stream else for_non_stream()
 
     def user_details(self, in_details: bool = True) -> dict:
         """Returns various information concerning the user
