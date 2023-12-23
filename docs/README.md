@@ -48,6 +48,7 @@ $ python -m WebChatGPT interactive
 General Kenobi! You've activated my nostalgia circuits. What can I do for you    
 today?  
 ```
+![View Demo](https://github.com/Simatwa/WebChatGPT/assets/102549052/34e65ee5-a5fc-472d-baaf-762c6f76e403)
 
 <summary>
 
