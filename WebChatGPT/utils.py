@@ -17,7 +17,6 @@ headers = request_headers = {
     "Alt-Used": "chat.openai.com",
     "Authorization": f"Bearer %(value)s",
     "Connection": "keep-alive",
-    # "Content-Length": "904",
     "Content-Type": "application/json",
     "Host": "chat.openai.com",
     "Origin": "https://chat.openai.com",
