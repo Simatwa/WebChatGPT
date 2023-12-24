@@ -39,7 +39,7 @@ print(response)
 
 ## Prerequisites
 
-- [x] Python>=3.10 Installed
+- [x] Python>=3.9 Installed
 - [x] Chrome or Firefox browser
 - [x] [export-cookie-for-puppeteer](https://github.com/ktty1220/export-cookie-for-puppeteer) extension installed.
 
