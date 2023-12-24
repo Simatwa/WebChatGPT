@@ -9,6 +9,7 @@ from rich.panel import Panel
 from rich.style import Style
 from rich.markdown import Markdown
 from rich.live import Live
+from rich.prompt import Prompt
 from .main import ChatGPT
 from time import sleep
 import logging
@@ -23,6 +24,8 @@ from .utils import error_handler
 from typing import Iterator
 
 getExc = lambda e: e.args[1] if len(e.args) > 1 else str(e)
+
+rich_code_themes = ["monokai", "paraiso-dark", "igor", "vs", "fruity", "xcode"]
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s : %(message)s ",  # [%(module)s,%(lineno)s]", # for debug purposes
@@ -39,6 +42,7 @@ def stream_output(
     transient: bool = False,
     title_generator: object = None,
     title_generator_params: dict = {},
+    code_theme: str = "monokai",
 ) -> None:
     """Stdout streaming response
 
@@ -50,6 +54,7 @@ def stream_output(
         transient (bool, optional): Flag for transient. Defaults to False.
         title_generator (object, optional): Function for generating title. Defaults to None.
         title_generator_params (dict, optional): Kwargs for `title_generator` function. Defaults to {}.
+        code_theme (str, optional): Theme for styling codes. Defaults to `monokai`
     """
     render_this = ""
     with Live(render_this, transient=transient, refresh_per_second=8) as live:
@@ -57,7 +62,7 @@ def stream_output(
             render_this += entry
             live.update(
                 Panel(
-                    Markdown(entry) if is_markdown else entry,
+                    Markdown(entry, code_theme=code_theme) if is_markdown else entry,
                     title=title,
                     style=style,
                 )
@@ -66,7 +71,7 @@ def stream_output(
             title = title_generator(**title_generator_params)
             live.update(
                 Panel(
-                    Markdown(entry) if is_markdown else entry,
+                    Markdown(entry, code_theme=code_theme) if is_markdown else entry,
                     title=title,
                     style=style,
                 )
@@ -160,6 +165,7 @@ class InteractiveChatGPT(cmd.Cmd):
         self.prettify = True
         self.color = "cyan"
         self.show_title = False
+        self.code_theme = "monokai"
 
     def output_bond(
         self,
@@ -185,7 +191,7 @@ class InteractiveChatGPT(cmd.Cmd):
 """
         rich.print(
             Panel(
-                Markdown(text),
+                Markdown(text, code_theme=self.code_theme),
                 title=title.title(),
                 style=Style(
                     color=color,
@@ -234,11 +240,13 @@ This is a {__info__}
 ├────┼────────────────────────┼─────────────────────────────────────┤
 │ 13 │ migrate                │ Shift to another conversation       │
 ├────┼────────────────────────┼─────────────────────────────────────┤
-│ 14 │ ./<command>            │ Run system command                  │
+│ 14 │ set_theme              │ Set theme for displaying codes      │
 ├────┼────────────────────────┼─────────────────────────────────────┤
-│ 15 │ <any other>            │ Interact with ChatGPT               │
+│ 15 │ ./<command>            │ Run system command                  │
 ├────┼────────────────────────┼─────────────────────────────────────┤
-│ 16 │ exit                   │ Quits Program                       │
+│ 16 │ <any other>            │ Interact with ChatGPT               │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 17 │ exit                   │ Quits Program                       │
 ╘════╧════════════════════════╧═════════════════════════════════════╛
 
 Submit any bug at : {__repo__}/issues/new
@@ -466,6 +474,18 @@ Have some fun!
             print("Okay Goodbye!")
             return True
 
+    @busy_bar.run()
+    def do_set_theme(self, line):
+        """Set theme for displaying codes"""
+        if line in rich_code_themes:
+            self.code_theme = line
+        else:
+            self.code_theme = Prompt.ask(
+                "Enter theme name",
+                choices=rich_code_themes,
+            )
+        click.secho(f"Code theme set to '{self.code_theme}'")
+
     def generate_title(self):
         """Get current conversation title"""
         resp = self.bot.generate_title(
@@ -494,6 +514,7 @@ Have some fun!
                         color=self.color,
                     ),
                     title_generator=self.generate_title if self.show_title else None,
+                    code_theme=self.code_theme,
                 )
                 """
                 if self.prettify:
@@ -559,6 +580,13 @@ def chat():
     envvar="busy_bar_index",
 )
 @click.option(
+    "-T",
+    "--code-theme",
+    help="Theme for styling codes in markdown",
+    default="monokai",
+    type=click.Choice(rich_code_themes),
+)
+@click.option(
     "-c", "--color", default=None, help="Font color for printing the contents"
 )
 @click.option("--prettify/--raw", default=True, help="Prettify the markdowned response")
@@ -572,6 +600,7 @@ def interactive(
     timeout,
     prompt,
     busy_bar_index,
+    code_theme,
     color,
     prettify,
     show_title,
@@ -583,6 +612,7 @@ def interactive(
     bot.prettify = prettify
     bot.color = color
     bot.show_title = show_title
+    bot.code_theme = code_theme
     if prompt:
         bot.default(prompt)
     bot.cmdloop()
@@ -621,10 +651,17 @@ def interactive(
     prompt="Enter message",
 )
 @click.option(
+    "-T",
+    "--code-theme",
+    help="Theme for styling codes in markdown",
+    default="monokai",
+    type=click.Choice(rich_code_themes),
+)
+@click.option(
     "-c", "--color", default=None, help="Font color for printing the contents"
 )
 @click.option("--prettify/--raw", default=True, help="Prettify the markdowned response")
-def generate(cookie_path, model, index, timeout, prompt, color, prettify):
+def generate(cookie_path, model, index, timeout, prompt, code_theme, color, prettify):
     """Generate a quick response with ChatGPT"""
 
     bot = ChatGPT(cookie_path, model, index, timeout=timeout)
@@ -640,6 +677,7 @@ def generate(cookie_path, model, index, timeout, prompt, color, prettify):
             frame=False,
             color=color,
         ),
+        code_theme=code_theme,
     )
 
 
