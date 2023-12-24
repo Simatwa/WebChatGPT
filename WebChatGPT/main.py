@@ -76,6 +76,7 @@ class ChatGPT:
         }
         self.__already_init = False
         self.__index = conversation_index
+        self.stream_chunk_size = 64
 
     def __generate_payload(self, prompt: str) -> dict:
         return utils.generate_payload(self, prompt)
@@ -169,7 +170,9 @@ class ChatGPT:
 
             def for_stream():
                 for value in response.iter_lines(
-                    decode_unicode=True, delimiter="data:"
+                    decode_unicode=True,
+                    delimiter="data:",
+                    chunk_size=self.stream_chunk_size,
                 ):
                     try:
                         to_dict = json.loads(value)
@@ -188,7 +191,9 @@ class ChatGPT:
             def for_non_stream():
                 response_to_be_returned = {}
                 for value in response.iter_lines(
-                    decode_unicode=True, delimiter="data:"
+                    decode_unicode=True,
+                    delimiter="data:",
+                    chunk_size=self.stream_chunk_size,
                 ):
                     try:
                         to_dict = json.loads(value)

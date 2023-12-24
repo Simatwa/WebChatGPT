@@ -17,7 +17,6 @@ headers = request_headers = {
     "Alt-Used": "chat.openai.com",
     "Authorization": f"Bearer %(value)s",
     "Connection": "keep-alive",
-    # "Content-Length": "904",
     "Content-Type": "application/json",
     "Host": "chat.openai.com",
     "Origin": "https://chat.openai.com",
@@ -83,6 +82,10 @@ def get_request_headers_and_append_auth(self) -> dict:
             + __common_error_support_info
         )
     self.auth = resp.json()
+    if self.auth.get("error"):
+        raise Exception(
+            "Your cookies have expired, login to `chat.openai.com` and then export new ones."
+        )
     auth_template = headers["Authorization"]
     headers["Authorization"] = auth_template % {"value": self.auth["accessToken"]}
     return headers
@@ -91,7 +94,7 @@ def get_request_headers_and_append_auth(self) -> dict:
 @error_handler(
     exit_on_error=True,
     raise_err=True,
-    info="Probably you passed invalid path to cookies or your cookies have expired. "
+    info="Probably you passed invalid path to .json file containing cookies for `chat.openai.com` . "
     + __common_error_support_info,
 )
 def get_cookies(path: str) -> dict:

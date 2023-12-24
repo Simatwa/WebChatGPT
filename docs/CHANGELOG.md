@@ -71,3 +71,18 @@ More console chat manipulation features.
 
 **What's new?**
 - Exception support info
+
+## v0.1.6
+
+**What's new?**
+- Support streaming response
+- Stream response at console - (*default*)
+- Specify stdout font color at console
+
+## v0.1.7
+
+**What's new?**
+- Verify cookies expiry state
+- More console based enhancements
+- Enhanced error support information
+- Show conversation title by default - (*console*)
