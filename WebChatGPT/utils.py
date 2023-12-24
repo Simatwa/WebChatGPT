@@ -12,7 +12,7 @@ __common_error_support_info = "Incase you have no idea on how to get the cookies
 
 headers = request_headers = {
     "Accept": "text/event-stream",
-    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Encoding": "gzip, deflate",
     "Accept-Language": "en-US",
     "Alt-Used": "chat.openai.com",
     "Authorization": f"Bearer %(value)s",
