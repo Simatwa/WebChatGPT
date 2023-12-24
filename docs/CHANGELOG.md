@@ -81,7 +81,7 @@ More console chat manipulation features.
 
 ## v0.1.7
 
-**Wha's new?**
+**What's new?**
 - Verify cookies expiry state
 - More console based enhancements
 - Enhanced error support information
