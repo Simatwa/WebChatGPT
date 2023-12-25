@@ -86,3 +86,9 @@ More console chat manipulation features.
 - More console based enhancements
 - Enhanced error support information
 - Show conversation title by default - (*console*)
+
+## v0.1.8
+
+**What's new?**
+- Issue prompt from last copied text - (**console**)
+- *Other minor updates*
