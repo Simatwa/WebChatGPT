@@ -242,11 +242,13 @@ This is a {__info__}
 ├────┼────────────────────────┼─────────────────────────────────────┤
 │ 14 │ set_theme              │ Set theme for displaying codes      │
 ├────┼────────────────────────┼─────────────────────────────────────┤
-│ 15 │ ./<command>            │ Run system command                  │
+│ 15 │ from_copied            │ Use last copied text as prompt      │
 ├────┼────────────────────────┼─────────────────────────────────────┤
-│ 16 │ <any other>            │ Interact with ChatGPT               │
+│ 16 │ ./<command>            │ Run system command                  │
 ├────┼────────────────────────┼─────────────────────────────────────┤
-│ 17 │ exit                   │ Quits Program                       │
+│ 17 │ <any other>            │ Interact with ChatGPT               │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 18 │ exit                   │ Quit Program                        │
 ╘════╧════════════════════════╧═════════════════════════════════════╛
 
 Submit any bug at : {__repo__}/issues/new
@@ -495,6 +497,15 @@ Have some fun!
         if "message" in resp:
             return resp["message"]
         return "Untitled"
+
+    def do_from_copied(self, line):
+        """Use last copied text as prompt"""
+        issued_prompt = (
+            f"{line}\n{pyperclip.paste()}" if bool(line.strip()) else pyperclip.paste()
+        )
+        click.secho(issued_prompt, fg="yellow")
+        if click.confirm("Do you wish to proceed"):
+            self.default()
 
     # @busy_bar.run()
     def default(self, line):
