@@ -4,6 +4,7 @@ from WebChatGPT import utils
 import logging
 import json
 import re
+from functools import lru_cache
 
 
 class ChatGPT:
@@ -497,6 +498,7 @@ class ChatGPT:
                 f"Index '{index} is greater than the total conversations '{len(conversations)}"
             )
 
+    @lru_cache(maxsize=201)
     def generate_title(self, conversation_id: str, message_id: str) -> dict:
         """Generates title for a particular conversation message
 
