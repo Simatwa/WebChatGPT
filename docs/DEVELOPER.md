@@ -2,8 +2,7 @@
 
 ```python
 from WebChatGPT import ChatGPT
-bot = ChatGPT(
- 
+bot = ChatGPT( 
     "<path-to-openai-cookies.json>"
 )
 print(bot.chat('<Your Prompt>'))
@@ -55,7 +54,7 @@ from WebChatGPT import ChatGPT
 bot = ChatGPT(
     "<path-to-openai-cookies.json>"
 )
-response = bot.ask('<Your prompt'>)
+response = bot.ask('<Your prompt>')
 
 print(response)
 ```
