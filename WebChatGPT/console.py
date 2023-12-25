@@ -4,6 +4,7 @@ import click
 import cmd
 import rich
 import os
+import re
 import getpass
 from rich.panel import Panel
 from rich.style import Style
@@ -20,7 +21,7 @@ import pyperclip
 from functools import wraps
 from threading import Thread as thr
 from . import __repo__, __version__, __author__, __info__
-from .utils import error_handler
+from .utils import error_handler, get_message
 from typing import Iterator
 
 getExc = lambda e: e.args[1] if len(e.args) > 1 else str(e)
@@ -498,14 +499,84 @@ Have some fun!
             return resp["message"]
         return "Untitled"
 
+    @busy_bar.run()
     def do_from_copied(self, line):
-        """Use last copied text as prompt"""
+        """Use last copied text as prompt
+        Usage:
+            from_copied:
+                 prompt = {text-copied}
+            from_copied Debug this code:
+                 prompt = Debug this code {newline} {text-copied}
+        """
         issued_prompt = (
             f"{line}\n{pyperclip.paste()}" if bool(line.strip()) else pyperclip.paste()
         )
         click.secho(issued_prompt, fg="yellow")
         if click.confirm("Do you wish to proceed"):
-            self.default()
+            self.default(issued_prompt)
+
+    @busy_bar.run(help="System error")
+    def do_copy_this(self, line):
+        """Copy last response
+        Usage:
+           copy_this:
+               text-copied = {whole last-response}
+           copy_this code:
+               text-copied = {All codes in last response}
+        """
+        if self.bot.last_response:
+            global last_response
+            last_response = get_message(self.bot.last_response)
+            if not "code" in line:
+                pyperclip.copy(last_response)
+                click.secho("Last response copied successfully!", fg="cyan")
+                return
+
+            # Copies just code
+            sanitized_codes = []
+            code_blocks = re.findall(r"```.*?```", last_response, re.DOTALL)
+            for code_block in code_blocks:
+                new_code_block = re.sub(
+                    "^```.*$", "", code_block.strip(), flags=re.MULTILINE
+                )
+                if bool(new_code_block.strip()):
+                    sanitized_codes.append(new_code_block)
+            if sanitized_codes:
+                if len(sanitized_codes) > 1:
+                    if not click.confirm("Do you wish to copy all codes"):
+                        for index, code in enumerate(sanitized_codes):
+                            rich.print(
+                                Panel(
+                                    Markdown(
+                                        code_blocks[index], code_theme=self.code_theme
+                                    ),
+                                    title=f"Index : {index}",
+                                    title_align="left",
+                                )
+                            )
+
+                        pyperclip.copy(
+                            sanitized_codes[
+                                click.prompt(
+                                    "Enter code index",
+                                    type=click.IntRange(0, len(sanitized_codes) - 1),
+                                )
+                            ]
+                        )
+                        click.secho("Code copied successfully", fg="cyan")
+                    else:
+                        pyperclip.copy("\n\n".join(sanitized_codes))
+                        click.secho(
+                            f"All {len(sanitized_codes)} codes copied successfully!",
+                            fg="cyan",
+                        )
+                else:
+                    pyperclip.copy(sanitized_codes[0])
+                    click.secho("Code copied successfully!", fg="cyan")
+            else:
+                click.secho("No code found in the last response!", fg="red")
+        else:
+            click.secho("Chat with ChatGPT first.", fg="yellow")
 
     # @busy_bar.run()
     def default(self, line):

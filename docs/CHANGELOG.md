@@ -90,5 +90,11 @@ More console chat manipulation features.
 ## v0.1.8
 
 **What's new?**
-- Issue prompt from last copied text - (**console**)
+- Issue prompt from last copied text - (*console*)
 - *Other minor updates*
+
+## v0.1.9
+
+**What's new?**
+- Copy whole response or just code(s) only - (*console*)
+- *Minor bugs fixed*

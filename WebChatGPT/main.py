@@ -183,6 +183,7 @@ class ChatGPT:
                             ] = to_dict
                             continue
                         # Only data containing the `feedback body` make it to here
+                        self.last_response.update(to_dict)
                         yield to_dict
                     except json.decoder.JSONDecodeError:
                         # Caused by either empty string or [DONE]
@@ -204,6 +205,7 @@ class ChatGPT:
                             ] = to_dict
                             continue
                         # Only data containing the `feedback body` make it to here
+                        self.last_response.update(to_dict)
                         response_to_be_returned.update(to_dict)
                     except json.decoder.JSONDecodeError:
                         # Caused by either empty string or [DONE]
