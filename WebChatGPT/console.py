@@ -243,13 +243,15 @@ This is a {__info__}
 ├────┼────────────────────────┼─────────────────────────────────────┤
 │ 14 │ set_theme              │ Set theme for displaying codes      │
 ├────┼────────────────────────┼─────────────────────────────────────┤
-│ 15 │ from_copied            │ Use last copied text as prompt      │
+│ 15 │ copy_this              │ Copy last response                  │
 ├────┼────────────────────────┼─────────────────────────────────────┤
-│ 16 │ ./<command>            │ Run system command                  │
+│ 16 │ from_copied            │ Use last copied text as prompt      │
 ├────┼────────────────────────┼─────────────────────────────────────┤
-│ 17 │ <any other>            │ Interact with ChatGPT               │
+│ 17 │ ./<command>            │ Run system command                  │
 ├────┼────────────────────────┼─────────────────────────────────────┤
-│ 18 │ exit                   │ Quit Program                        │
+│ 18 │ <any other>            │ Interact with ChatGPT               │
+├────┼────────────────────────┼─────────────────────────────────────┤
+│ 19 │ exit                   │ Quit Program                        │
 ╘════╧════════════════════════╧═════════════════════════════════════╛
 
 Submit any bug at : {__repo__}/issues/new
