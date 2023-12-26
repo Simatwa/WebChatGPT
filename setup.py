@@ -31,7 +31,7 @@ setup(
         "python-dotenv==1.0.0",
         "click==8.1.3",
         "rich==13.3.4",
-        "pyperclip==1.8.2",
+        "clipman==3.1.0",
     ],
     python_requires=">=3.9",
     keywords=[

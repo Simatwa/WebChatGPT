@@ -17,7 +17,7 @@ import logging
 import dotenv
 import datetime
 import json
-import pyperclip
+import clipman
 from functools import wraps
 from threading import Thread as thr
 from . import __repo__, __version__, __author__, __info__
@@ -34,6 +34,7 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
+clipman.init()
 
 def stream_output(
     iterable: Iterator,
@@ -210,49 +211,49 @@ Greetings {self.user_name}.
 
 This is a {__info__}
 
-╒════╤════════════════════════╤═════════════════════════════════════╕
-│    │ Command                │ Action                              │
-╞════╪════════════════════════╪═════════════════════════════════════╡
-│  0 │ h                      │ Show this help info                 │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  1 │ history                │ Show conversation history           │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  2 │ share                  │ Share conversation by link          │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  3 │ stop_share             │ Revoke shared conversation link     │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  4 │ rename                 │ Rename conversation title           │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  5 │ archive                │ Archive or unarchive a conversation │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  6 │ shared_conversations   │ Show shared conversations           │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  7 │ previous_conversations │ Show previous conversations         │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  8 │ delete_conversation    │ Delete a particular conversation    │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  9 │ prompts                │ Generate random prompts             │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 10 │ account_info           │ ChatGPT account info/setings        │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 11 │ ask                    │ Show raw response from ChatGPT      │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 12 │ auth                   │ Show current user auth info         │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 13 │ migrate                │ Shift to another conversation       │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 14 │ set_theme              │ Set theme for displaying codes      │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 15 │ copy_this              │ Copy last response                  │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 16 │ from_copied            │ Use last copied text as prompt      │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 17 │ ./<command>            │ Run system command                  │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 18 │ <any other>            │ Interact with ChatGPT               │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 19 │ exit                   │ Quit Program                        │
-╘════╧════════════════════════╧═════════════════════════════════════╛
+╒════╤════════════════════════╤═══════════════════════════════════════╕
+│    │ Command                │ Action                                │
+╞════╪════════════════════════╪═══════════════════════════════════════╡
+│  0 │ h                      │ Show this help info                   │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  1 │ history                │ Show conversation history             │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  2 │ share                  │ Share conversation by link            │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  3 │ stop_share             │ Revoke shared conversation link       │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  4 │ rename                 │ Rename conversation title             │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  5 │ archive                │ Archive or unarchive a conversation   │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  6 │ shared_conversations   │ Show shared conversations             │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  7 │ previous_conversations │ Show previous conversations           │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  8 │ delete_conversation    │ Delete a particular conversation      │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  9 │ prompts                │ Generate random prompts               │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 10 │ account_info           │ ChatGPT account info/setings          │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 11 │ ask                    │ Show raw response from ChatGPT        │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 12 │ auth                   │ Show current user auth info           │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 13 │ migrate                │ Shift to another conversation         │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 14 │ set_theme              │ Set theme for displaying codes        │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 15 │ copy_this              │ Copy last response                    │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 16 │ with_copied            │ Attach last copied text to the prompt │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 17 │ ./<command>            │ Run system command                    │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 18 │ <any other>            │ Interact with ChatGPT                 │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 19 │ exit                   │ Quit Program                          │
+╘════╧════════════════════════╧═══════════════════════════════════════╛
 
 Submit any bug at : {__repo__}/issues/new
 
@@ -329,7 +330,7 @@ Have some fun!
         url = share_info.get("share_url")
         self.output_bond(share_info.get("title"), f"Url : **{url}**")
         if click.confirm("Copy link to clipboard"):
-            pyperclip.copy(url)
+            clipman.set(url)
             click.secho("Link copied to clipboard.", fg="green")
 
     @busy_bar.run(help="Probably conversation ID is incorrect")
@@ -502,8 +503,8 @@ Have some fun!
         return "Untitled"
 
     @busy_bar.run()
-    def do_from_copied(self, line):
-        """Use last copied text as prompt
+    def do_with_copied(self, line):
+        """Attach last copied text to the prompt
         Usage:
             from_copied:
                  prompt = {text-copied}
@@ -511,7 +512,7 @@ Have some fun!
                  prompt = Debug this code {newline} {text-copied}
         """
         issued_prompt = (
-            f"{line}\n{pyperclip.paste()}" if bool(line.strip()) else pyperclip.paste()
+            f"{line}\n{clipman.get()}" if bool(line.strip()) else clipman.get()
         )
         click.secho(issued_prompt, fg="yellow")
         if click.confirm("Do you wish to proceed"):
@@ -530,7 +531,7 @@ Have some fun!
             global last_response
             last_response = get_message(self.bot.last_response)
             if not "code" in line:
-                pyperclip.copy(last_response)
+                clipman.set(last_response)
                 click.secho("Last response copied successfully!", fg="cyan")
                 return
 
@@ -557,7 +558,7 @@ Have some fun!
                                 )
                             )
 
-                        pyperclip.copy(
+                        clipman.set(
                             sanitized_codes[
                                 click.prompt(
                                     "Enter code index",
@@ -567,13 +568,13 @@ Have some fun!
                         )
                         click.secho("Code copied successfully", fg="cyan")
                     else:
-                        pyperclip.copy("\n\n".join(sanitized_codes))
+                        clipman.set("\n\n".join(sanitized_codes))
                         click.secho(
                             f"All {len(sanitized_codes)} codes copied successfully!",
                             fg="cyan",
                         )
                 else:
-                    pyperclip.copy(sanitized_codes[0])
+                    clipman.set(sanitized_codes[0])
                     click.secho("Code copied successfully!", fg="cyan")
             else:
                 click.secho("No code found in the last response!", fg="red")
