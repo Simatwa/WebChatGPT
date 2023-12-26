@@ -77,6 +77,7 @@ class ChatGPT:
         }
         self.__already_init = False
         self.__index = conversation_index
+        self.__title_cache = {}
         self.stream_chunk_size = 64
 
     def __generate_payload(self, prompt: str) -> dict:
@@ -499,16 +500,23 @@ class ChatGPT:
             )
 
     @lru_cache(maxsize=201)
-    def generate_title(self, conversation_id: str, message_id: str) -> dict:
+    def generate_title(
+        self, conversation_id: str, message_id: str, per_conversation: bool = True
+    ) -> dict:
         """Generates title for a particular conversation message
 
         Args:
             conversation_id (str): ``
             message_id (str): ``
+            per_conversation (bool): Ignore message_id and serve from cache based on conversation_id. Defaults to True.
 
         Returns:
             dict: `{}`
         """
+        if per_conversation and self.__title_cache.get(conversation_id):
+            # OpenAI dropped support for generating conversation title for every new message in ChatGPT 3.5 model
+            #  - Probably to non-premium users only.
+            return self.__title_cache[conversation_id]
         resp = self.session.post(
             self.title_generation_endpoint % {"conversation_id": conversation_id},
             json={"message_id": message_id},
@@ -520,6 +528,8 @@ class ChatGPT:
             match = re.search(r"'([^']*)'", generated_title)
             if match:
                 sanitized_resp["message"] = match.group(1)
+                if per_conversation:
+                    self.__title_cache[conversation_id] = sanitized_resp
         return sanitized_resp
 
     def delete_conversation(self, conversation_id: str) -> dict:

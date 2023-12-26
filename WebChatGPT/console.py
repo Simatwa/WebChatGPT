@@ -36,6 +36,7 @@ logging.basicConfig(
 
 clipman.init()
 
+
 def stream_output(
     iterable: Iterator,
     title: str = "",
