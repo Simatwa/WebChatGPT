@@ -104,3 +104,9 @@ More console chat manipulation features.
 **What's new?**
 - Wider system support for *copy - paste* operations - *(console)*
 - *from_copied* renamed to *with_copied*  - *(console)*
+
+## v0.2.1
+
+**What's new?**
+- Failsafe copy-paste operations - *(Console)*
+- Prompt to save json data - *(Console)*

@@ -3,7 +3,7 @@
 <p align="center">
 <a href="https://github.com/Simatwa/WebChatGPT/actions/workflows/python-test.yml"><img src="https://github.com/Simatwa/WebChatGPT/actions/workflows/python-test.yml/badge.svg" alt="Python Test"/></a>
 <a href="LICENSE"><img alt="License" src="https://img.shields.io/static/v1?logo=GPL&color=Blue&message=GNUv3&label=License"/></a>
-<a href="https://pypi.org/project/webchatgpt"><img alt="PyPi" src="https://img.shields.io/static/v1?logo=pypi&label=Pypi&message=v0.2.0&color=green"/></a>
+<a href="https://pypi.org/project/webchatgpt"><img alt="PyPi" src="https://img.shields.io/static/v1?logo=pypi&label=Pypi&message=v0.2.1&color=green"/></a>
 <a href="https://github.com/psf/black"><img alt="Black" src="https://img.shields.io/static/v1?logo=Black&label=Code-style&message=Black"/></a>
 <a href="#"><img alt="Passing" src="https://img.shields.io/static/v1?logo=Docs&label=Docs&message=Passing&color=green"/></a>
 <a href="#"><img alt="coverage" src="https://img.shields.io/static/v1?logo=Coverage&label=Coverage&message=90%&color=yellowgreen"/></a>
@@ -187,49 +187,49 @@ Options:
 Running `h` while in interactive prompt:
 
 ```
-╒╒════╤════════════════════════╤═════════════════════════════════════╕
-│    │ Command                │ Action                              │
-╞════╪════════════════════════╪═════════════════════════════════════╡
-│  0 │ h                      │ Show this help info                 │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  1 │ history                │ Show conversation history           │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  2 │ share                  │ Share conversation by link          │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  3 │ stop_share             │ Revoke shared conversation link     │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  4 │ rename                 │ Rename conversation title           │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  5 │ archive                │ Archive or unarchive a conversation │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  6 │ shared_conversations   │ Show shared conversations           │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  7 │ previous_conversations │ Show previous conversations         │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  8 │ delete_conversation    │ Delete a particular conversation    │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│  9 │ prompts                │ Generate random prompts             │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 10 │ account_info           │ ChatGPT account info/setings        │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 11 │ ask                    │ Show raw response from ChatGPT      │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 12 │ auth                   │ Show current user auth info         │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 13 │ migrate                │ Shift to another conversation       │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 14 │ set_theme              │ Set theme for displaying codes      │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 15 │ copy_this              │ Copy last response                  │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 16 │ from_copied            │ Use last copied text as prompt      │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 17 │ ./<command>            │ Run system command                  │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 18 │ <any other>            │ Interact with ChatGPT               │
-├────┼────────────────────────┼─────────────────────────────────────┤
-│ 19 │ exit                   │ Quit Program                        │
-╘════╧════════════════════════╧═════════════════════════════════════╛
+╒════╤════════════════════════╤═══════════════════════════════════════╕
+│    │ Command                │ Action                                │
+╞════╪════════════════════════╪═══════════════════════════════════════╡
+│  0 │ h                      │ Show this help info                   │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  1 │ history                │ Show conversation history             │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  2 │ share                  │ Share conversation by link            │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  3 │ stop_share             │ Revoke shared conversation link       │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  4 │ rename                 │ Rename conversation title             │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  5 │ archive                │ Archive or unarchive a conversation   │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  6 │ shared_conversations   │ Show shared conversations             │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  7 │ previous_conversations │ Show previous conversations           │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  8 │ delete_conversation    │ Delete a particular conversation      │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│  9 │ prompts                │ Generate random prompts               │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 10 │ account_info           │ ChatGPT account info/setings          │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 11 │ ask                    │ Show raw response from ChatGPT        │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 12 │ auth                   │ Show current user auth info           │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 13 │ migrate                │ Shift to another conversation         │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 14 │ set_theme              │ Set theme for displaying codes        │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 15 │ copy_this              │ Copy last response                    │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 16 │ with_copied            │ Attach last copied text to the prompt │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 17 │ ./<command>            │ Run system command                    │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 18 │ <any other>            │ Interact with ChatGPT                 │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 19 │ exit                   │ Quit Program                          │
+╘════╧════════════════════════╧═══════════════════════════════════════╛
 ```
 
 </details>
