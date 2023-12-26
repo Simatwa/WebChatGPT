@@ -98,3 +98,9 @@ More console chat manipulation features.
 **What's new?**
 - Copy whole response or just code(s) only - (*console*)
 - *Minor bugs fixed*
+
+## v0.2.0
+
+**What's new?**
+- Wider system support for *copy - paste* operations - *(console)*
+- *from_copied* renamed to *with_copied*  - *(console)*
