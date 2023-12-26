@@ -194,14 +194,14 @@ class InteractiveChatGPT(cmd.Cmd):
             frame (bool, optional): Add frame. Defaults to True.
         """
         if is_json:
-            text = f"""
+            new_text = f"""
 ```json
 {json.dumps(text,indent=4)}
 ```
 """
         rich.print(
             Panel(
-                Markdown(text, code_theme=self.code_theme),
+                Markdown(new_text, code_theme=self.code_theme),
                 title=title.title(),
                 style=Style(
                     color=color,
@@ -209,6 +209,14 @@ class InteractiveChatGPT(cmd.Cmd):
                 ),
             ),
         )
+        if is_json and click.confirm("Do you wish to save this"):
+            default_path = title + ".json"
+            save_to = click.prompt(
+                "Enter path to save to", default=default_path, type=click.STRING
+            )
+            with open(save_to, "a") as fh:
+                json.dump(text, fh, indent=4)
+            click.secho(f"Successfuly saved to `{save_to}`", fg="green")
 
     def do_h(self, text):
         """Echoes general help info"""
@@ -780,8 +788,8 @@ def main():
     rich.print(
         Panel(
             f"""
-  Repo : {__repo__}
-  By : {__author__}
+            Repo : {__repo__}
+            By : {__author__}
           """,
             title=f"WebChatGPT v{__version__}",
             style=Style(
