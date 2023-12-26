@@ -34,7 +34,14 @@ logging.basicConfig(
     level=logging.INFO,
 )
 
-clipman.init()
+try:
+    clipman.init()
+except Exception as e:
+    logging.debug(f"Dropping clipman in favor of pyperclip - {getExc(e)}")
+    import pyperclip
+
+    clipman.set = pyperclip.copy
+    clipman.get = pyperclip.paste
 
 
 def stream_output(

@@ -32,6 +32,7 @@ setup(
         "click==8.1.3",
         "rich==13.3.4",
         "clipman==3.1.0",
+        "pyperclip==1.8.2",
     ],
     python_requires=">=3.9",
     keywords=[
