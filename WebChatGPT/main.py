@@ -104,7 +104,10 @@ class ChatGPT:
         return self.last_response_metadata.get(2).get("message_id")
 
     def ask(
-        self, prompt: str, stream: bool = False, raw_response :bool=False,
+        self,
+        prompt: str,
+        stream: bool = False,
+        raw_response: bool = False,
     ) -> (
         dict
     ):  # dict/Iterator but for compatibility with Python 3.9 just `-> dict` is cool
@@ -177,7 +180,6 @@ class ChatGPT:
                     delimiter="data:",
                     chunk_size=self.stream_chunk_size,
                 ):
-                
                     try:
                         to_dict = json.loads(value)
                         if "is_completion" in to_dict.keys():

@@ -194,14 +194,14 @@ class InteractiveChatGPT(cmd.Cmd):
             frame (bool, optional): Add frame. Defaults to True.
         """
         if is_json:
-            new_text = f"""
+            text = f"""
 ```json
 {json.dumps(text,indent=4)}
 ```
 """
         rich.print(
             Panel(
-                Markdown(new_text, code_theme=self.code_theme),
+                Markdown(text, code_theme=self.code_theme),
                 title=title.title(),
                 style=Style(
                     color=color,
@@ -318,7 +318,7 @@ Have some fun!
                 default=history.get("title") + ".json",
                 type=click.STRING,
             )
-            with open(path, "w") as fh:
+            with open(path, "a") as fh:
                 json.dump(
                     history,
                     fh,
