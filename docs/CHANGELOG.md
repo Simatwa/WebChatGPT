@@ -110,3 +110,8 @@ More console chat manipulation features.
 **What's new?**
 - Failsafe copy-paste operations - *(Console)*
 - Prompt to save json data - *(Console)*
+
+## v0.2.2
+
+**What's new?**
+- History rendering issue fixed - *(Console)*
