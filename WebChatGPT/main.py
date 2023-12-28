@@ -104,7 +104,7 @@ class ChatGPT:
         return self.last_response_metadata.get(2).get("message_id")
 
     def ask(
-        self, prompt: str, stream: bool = False
+        self, prompt: str, stream: bool = False, raw_response :bool=False,
     ) -> (
         dict
     ):  # dict/Iterator but for compatibility with Python 3.9 just `-> dict` is cool
@@ -113,6 +113,7 @@ class ChatGPT:
                 Args:
                     prompt (str): message to be send
                     stream (bool, optional): Flag to stream response. Defaults to False.
+                    raw_response (bool, optional): Yield back unmodified response
                 returns :
                     dict {}
                 Yields :
@@ -176,6 +177,7 @@ class ChatGPT:
                     delimiter="data:",
                     chunk_size=self.stream_chunk_size,
                 ):
+                
                     try:
                         to_dict = json.loads(value)
                         if "is_completion" in to_dict.keys():
@@ -186,9 +188,11 @@ class ChatGPT:
                             continue
                         # Only data containing the `feedback body` make it to here
                         self.last_response.update(to_dict)
-                        yield to_dict
+                        yield value if raw_response else to_dict
                     except json.decoder.JSONDecodeError:
                         # Caused by either empty string or [DONE]
+                        if raw_response:
+                            yield value
                         pass
 
             def for_non_stream():
