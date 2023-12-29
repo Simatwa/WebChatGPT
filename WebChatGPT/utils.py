@@ -66,9 +66,6 @@ def error_handler(
 def get_request_headers_and_append_auth(self) -> dict:
     """Generate Http request headers & append OAuth
 
-    Args:
-        auth (str): OpenAI's authorization header
-
     Returns:
         dict: Request headers
     """
@@ -76,6 +73,7 @@ def get_request_headers_and_append_auth(self) -> dict:
         "https://chat.openai.com/api/auth/session",
         headers=request_headers,
     )
+    # This sh*t here is raising http 403 in Python 3.9. Consider fixing it.
     if not resp.ok:
         raise Exception(
             "Failed to fetch Auth value, supply path to correct cookies.  "
