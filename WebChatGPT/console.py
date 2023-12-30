@@ -90,7 +90,17 @@ def stream_output(
 
 class busy_bar:
     querying = None
-    __spinner = (("-", "\\", "|", "/"), ("█■■■■", "■█■■■", "■■█■■", "■■■█■", "■■■■█"))
+    __spinner = (
+        ("-", "\\", "|", "/"),
+        (
+            "█■■■■",
+            "■█■■■",
+            "■■█■■",
+            "■■■█■",
+            "■■■■█",
+        ),
+        ("⣾ ", "⣽ ", "⣻ ", "⢿ ", "⡿ ", "⣟ ", "⣯ ", "⣷ "),
+    )
     spin_index = 0
     sleep_time = 0.1
 
@@ -675,8 +685,8 @@ def chat():
 @click.option(
     "-B",
     "--busy-bar-index",
-    help="Busy bar index [0:/, 1:■█■■■]",
-    type=click.IntRange(0, 1),
+    help="Busy bar index [0:/, 1:■█■■■, 2:⣻]",
+    type=click.IntRange(0, 2),
     default=1,
     envvar="busy_bar_index",
 )
