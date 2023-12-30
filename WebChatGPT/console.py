@@ -4,6 +4,7 @@ import click
 import cmd
 import rich
 import os
+import sys
 import re
 import getpass
 from rich.panel import Panel
@@ -274,11 +275,13 @@ This is a {__info__}
 ├────┼────────────────────────┼───────────────────────────────────────┤
 │ 16 │ with_copied            │ Attach last copied text to the prompt │
 ├────┼────────────────────────┼───────────────────────────────────────┤
-│ 17 │ ./<command>            │ Run system command                    │
+│ 17 │ clear                  │ Clear console                         │
 ├────┼────────────────────────┼───────────────────────────────────────┤
-│ 18 │ <any other>            │ Interact with ChatGPT                 │
+│ 18 │ ./<command>            │ Run system command                    │
 ├────┼────────────────────────┼───────────────────────────────────────┤
-│ 19 │ exit                   │ Quit Program                          │
+│ 19 │ <any other>            │ Interact with ChatGPT                 │
+├────┼────────────────────────┼───────────────────────────────────────┤
+│ 20 │ exit                   │ Quit Program                          │
 ╘════╧════════════════════════╧═══════════════════════════════════════╛
 
 Submit any bug at : {__repo__}/issues/new
@@ -606,6 +609,11 @@ Have some fun!
                 click.secho("No code found in the last response!", fg="red")
         else:
             click.secho("Chat with ChatGPT first.", fg="yellow")
+
+    def do_clear(self,line):
+        """Clear console"""
+        sys.stdout.write("\u001b[2J\u001b[H")
+        sys.stdout.flush()
 
     # @busy_bar.run()
     def default(self, line):

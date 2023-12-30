@@ -260,6 +260,8 @@ Consider taking a look at the [flow of events info](https://github.com/Simatwa/W
 
 - [x] You
 
+If you don't want to follow all those steps; there this script that works out of the box. No API key needed at all, not even the cookies. Just installation and you're good to go. Check out [tgpt2](https://github.com/Simatwa/tgpt2/).
+
 To those wishing to use the Official Openai API endpoints + GoogleBard at console environment; purpose to check out [GPT-CLI](https://github.com/Simatwa/GPT-CLI)
 
 ## Disclaimer
