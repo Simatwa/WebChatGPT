@@ -12,7 +12,7 @@ if not PATH.exists():
 
 setup(
     name="webchatgpt",
-    version="0.2.2",
+    version="0.2.3",
     license="GNU v3",
     author="Smartwa",
     maintainer="Smartwa",
@@ -20,7 +20,14 @@ setup(
     description="Reverse Engineering of ChatGPT Web-Version",
     packages=["WebChatGPT"],
     url="https://github.com/Simatwa/WebChatGPT",
-    project_urls={"Bug Report": "https://github.com/Simatwa/WebChatGPT/issues/new"},
+    project_urls={
+        "Bug Report": "https://github.com/Simatwa/WebChatGPT/issues/new",
+        "Homepage": "https://github.com/Simatwa/WebChatGPT",
+        "Source Code": "https://github.com/Simatwa/WebChatGPT",
+        "Issue Tracker": "https://github.com/Simatwa/WebChatGPT/issues",
+        "Download": "https://github.com/Simatwa/WebChatGPT/releases",
+        "Documentation": "https://github.com/Simatwa/WebChatGPT/blob/main/docs/README.md",
+                  },
     entry_points={
         "console_scripts": [
             "webchatgpt = WebChatGPT.console:main",

@@ -115,3 +115,9 @@ More console chat manipulation features.
 
 **What's new?**
 - History rendering issue fixed - *(Console)*
+
+## v0.2.3
+
+**What's new?**
+- Clear terminal command added - *Console* 
+- Other minor bugs
