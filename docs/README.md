@@ -12,6 +12,7 @@
 <!--<a href="https://github.com/Simatwa/WebChatGPT/releases"><img src="https://img.shields.io/github/downloads/Simatwa/WebChatGPT/total?label=Downloads&color=success" alt="Downloads"></img></a> -->
 <a href="https://github.com/Simatwa/WebChatGPT/releases"><img src="https://img.shields.io/github/v/release/Simatwa/WebChatGPT?color=success&label=Release&logo=github" alt="Latest release"></img></a>
 <a href="https://github.com/Simatwa/WebChatGPT/releases"><img src="https://img.shields.io/github/release-date/Simatwa/WebChatGPT?label=Release date&logo=github" alt="release date"></img></a>
+<a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com/Simatwa/WebChatGPT"/></a>
 <a href="https://wakatime.com/badge/github/Simatwa/WebChatGPT"><img src="https://wakatime.com/badge/github/Simatwa/WebChatGPT.svg" alt="wakatime"></a>
 </p>
 
