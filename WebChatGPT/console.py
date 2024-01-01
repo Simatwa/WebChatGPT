@@ -845,7 +845,7 @@ def interactive(
 def generate(
     cookie_path, model, index, timeout, prompt, code_theme, color, quiet, prettify
 ):
-    """Generate a quick response with ChatGPT"""
+    """Generate a quick response with ChatGPT (Default)"""
 
     bot = ChatGPT(cookie_path, model, index, timeout=timeout)
     content = bot.chat(
