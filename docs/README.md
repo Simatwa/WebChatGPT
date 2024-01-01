@@ -3,7 +3,7 @@
 <p align="center">
 <a href="https://github.com/Simatwa/WebChatGPT/actions/workflows/python-test.yml"><img src="https://github.com/Simatwa/WebChatGPT/actions/workflows/python-test.yml/badge.svg" alt="Python Test"/></a>
 <a href="LICENSE"><img alt="License" src="https://img.shields.io/static/v1?logo=GPL&color=Blue&message=GNUv3&label=License"/></a>
-<a href="https://pypi.org/project/webchatgpt"><img alt="PyPi" src="https://img.shields.io/static/v1?logo=pypi&label=Pypi&message=v0.2.3&color=green"/></a>
+<a href="https://pypi.org/project/webchatgpt"><img alt="PyPi" src="https://img.shields.io/static/v1?logo=pypi&label=Pypi&message=v0.2.4&color=green"/></a>
 <a href="https://github.com/psf/black"><img alt="Black" src="https://img.shields.io/static/v1?logo=Black&label=Code-style&message=Black"/></a>
 <a href="#"><img alt="Passing" src="https://img.shields.io/static/v1?logo=Docs&label=Docs&message=Passing&color=green"/></a>
 <a href="#"><img alt="coverage" src="https://img.shields.io/static/v1?logo=Coverage&label=Coverage&message=90%&color=yellowgreen"/></a>
@@ -40,7 +40,7 @@ print(response)
 
 ## Prerequisites
 
-- [x] Python>=3.9 Installed
+- [x] Python>=3.10 Installed
 - [x] Chrome or Firefox browser
 - [x] [export-cookie-for-puppeteer](https://github.com/ktty1220/export-cookie-for-puppeteer) extension installed.
 
@@ -81,14 +81,16 @@ By doing that you are good to go.
 - Converse Interactively:
 
 ```
-$ webchatgpt interactive -C <path-to-openai-cookie-file.json> -P "<your startup prompt though not a must>"
+$ webchatgpt interactive -C <path-to-openai-cookie-file.json> "<your startup prompt though not a must>"
 ```
 
 - Have a quick response
 
 ```
-$ webchatgpt generate -C <path-to-openai-cookie-file.json> -P "<your prompt here>"
+$ webchatgpt generate -C <path-to-openai-cookie-file.json> "<your prompt here>"
 ```
+
+- Since `generate` is the default option so something like this will this workout. `$ webchatgpt -C <path-to-openai-cookie-file.json> "<your prompt>"`
 
 Alternatives to `-C <path-to-openai-cookie-file.json>` :
 
@@ -98,7 +100,7 @@ On the current directory of your **terminal**,create a [`.env`](https://github.c
 openai_cookie_file=<path-to-cookie-file>
 ```
 
-Or simply run `$ webchatgpt <generate/interactive>` and then fill the prompt.
+Or simply make path to the cookie file an environment variable identified by `openai_cookie_file`. By that you'll just have to use less commands to get your work done e.g `webchatgpt "Nmap command for scanning SMB vulnerabilty on 192.168.0.1" -q | grep '$' > scan_smb.sh`
 
 <details>
 
@@ -238,6 +240,8 @@ Running `h` while in interactive prompt:
 </details>
 
 If `$ webchatgpt` doesn't look cool on you, there's this workaround `python -m WebChatGPT`
+
+Starting from [v0.2.4](https://github.com/Simatwa/WebChatGPT/releases) onwards, shortcut to `$ webchatgot` is `$ wbc`.
 
 ## [Developer Documentation](https://github.com/Simatwa/WebChatGPT/blob/main/docs/DEVELOPER.md)
 

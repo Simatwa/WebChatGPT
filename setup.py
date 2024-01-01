@@ -12,7 +12,7 @@ if not PATH.exists():
 
 setup(
     name="webchatgpt",
-    version="0.2.3",
+    version="0.2.4",
     license="GNU v3",
     author="Smartwa",
     maintainer="Smartwa",
@@ -27,10 +27,11 @@ setup(
         "Issue Tracker": "https://github.com/Simatwa/WebChatGPT/issues",
         "Download": "https://github.com/Simatwa/WebChatGPT/releases",
         "Documentation": "https://github.com/Simatwa/WebChatGPT/blob/main/docs/README.md",
-                  },
+    },
     entry_points={
         "console_scripts": [
             "webchatgpt = WebChatGPT.console:main",
+            "wbc = WebChatGPT.console:main",
         ],
     },
     install_requires=[

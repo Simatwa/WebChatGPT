@@ -12,6 +12,7 @@ from rich.style import Style
 from rich.markdown import Markdown
 from rich.live import Live
 from rich.prompt import Prompt
+from rich.console import Console
 from .main import ChatGPT
 from time import sleep
 import logging
@@ -54,6 +55,7 @@ def stream_output(
     title_generator: object = None,
     title_generator_params: dict = {},
     code_theme: str = "monokai",
+    frame: bool = False,
 ) -> None:
     """Stdout streaming response
 
@@ -66,9 +68,10 @@ def stream_output(
         title_generator (object, optional): Function for generating title. Defaults to None.
         title_generator_params (dict, optional): Kwargs for `title_generator` function. Defaults to {}.
         code_theme (str, optional): Theme for styling codes. Defaults to `monokai`
+        frame (bool, optional): Flag for response-framing
     """
     render_this = ""
-    with Live(render_this, transient=transient, refresh_per_second=8) as live:
+    with Live(render_this, transient=transient, refresh_per_second=16) as live:
         for entry in iterable:
             render_this += entry
             live.update(
@@ -86,6 +89,38 @@ def stream_output(
                     title=title,
                     style=style,
                 )
+            )
+
+
+def stream_console_output(
+    iterable: Iterator,
+    title: str = "",
+    is_markdown: bool = True,
+    style: object = Style(),
+    transient: bool = False,
+    title_generator: object = None,
+    title_generator_params: dict = {},
+    code_theme: str = "monokai",
+    frame: bool = False,
+) -> None:
+    """Stdout streaming response without frame
+
+    Args:
+        iterable (Iterator): Iterator containing contents to be stdout
+        title (str, optional): Content title. Defaults to ''.
+        is_markdown (bool, optional): Flag for markdown content. Defaults to True.
+        style (object, optional): `rich.style` instance. Defaults to Style().
+        transient (bool, optional): Flag for transient. Defaults to False.
+        title_generator (object, optional): Function for generating title. Defaults to None.
+        title_generator_params (dict, optional): Kwargs for `title_generator` function. Defaults to {}.
+        code_theme (str, optional): Theme for styling codes. Defaults to `monokai`
+        frame (bool, optional): Flag for response-framing
+    """
+    console = Console(style=style)
+    with Live(console=console, transient=transient, refresh_per_second=16) as live:
+        for entry in iterable:
+            live.update(
+                Markdown(entry, code_theme=code_theme) if is_markdown else entry,
             )
 
 
@@ -187,6 +222,7 @@ class InteractiveChatGPT(cmd.Cmd):
         self.color = "cyan"
         self.show_title = False
         self.code_theme = "monokai"
+        self.quiet = False
 
     def output_bond(
         self,
@@ -610,7 +646,7 @@ Have some fun!
         else:
             click.secho("Chat with ChatGPT first.", fg="yellow")
 
-    def do_clear(self,line):
+    def do_clear(self, line):
         """Clear console"""
         sys.stdout.write("\u001b[2J\u001b[H")
         sys.stdout.flush()
@@ -625,7 +661,8 @@ Have some fun!
                 busy_bar.start_spinning()
                 generated_response = self.bot.chat(line, stream=True)
                 busy_bar.stop_spinning()
-                stream_output(
+                stdout_handler = stream_console_output if self.quiet else stream_output
+                stdout_handler(
                     generated_response,
                     title="",
                     is_markdown=self.prettify,
@@ -685,10 +722,9 @@ def chat():
     type=click.INT,
     default=30,
 )
-@click.option(
-    "-P",
-    "--prompt",
-    help="Start conversation with this messsage",
+@click.argument(
+    "prompt",
+    required=False,
 )
 @click.option(
     "-B",
@@ -708,6 +744,14 @@ def chat():
 @click.option(
     "-c", "--color", default=None, help="Font color for printing the contents"
 )
+@click.option(
+    "-q",
+    "--quiet",
+    is_flag=True,
+    default=False,
+    help="Disable response framing - Defaults to False",
+    envvar="quiet",
+)
 @click.option("--prettify/--raw", default=True, help="Prettify the markdowned response")
 @click.option(
     "--show-title/--no-title", default=True, help="Flag for title generation control"
@@ -721,17 +765,32 @@ def interactive(
     busy_bar_index,
     code_theme,
     color,
+    quiet,
     prettify,
     show_title,
 ):
     """Chat with ChatGPT interactively"""
     assert isinstance(busy_bar_index, int), "Index must be an integer only"
+    rich.print(
+        Panel(
+            f"""
+            Repo : {__repo__}
+            By : {__author__}
+          """,
+            title=f"WebChatGPT v{__version__}",
+            style=Style(
+                color="cyan",
+                frame=True,
+            ),
+        ),
+    )
     busy_bar.spin_index = busy_bar_index
     bot = InteractiveChatGPT(cookie_path, model, index, timeout)
     bot.prettify = prettify
     bot.color = color
     bot.show_title = show_title
     bot.code_theme = code_theme
+    bot.quiet = quiet
     if prompt:
         bot.default(prompt)
     bot.cmdloop()
@@ -763,12 +822,7 @@ def interactive(
     type=click.INT,
     default=30,
 )
-@click.option(
-    "-P",
-    "--prompt",
-    help="Start conversation with this messsage",
-    prompt="Enter message",
-)
+@click.argument("prompt", required=True)
 @click.option(
     "-T",
     "--code-theme",
@@ -779,8 +833,18 @@ def interactive(
 @click.option(
     "-c", "--color", default=None, help="Font color for printing the contents"
 )
+@click.option(
+    "-q",
+    "--quiet",
+    is_flag=True,
+    default=False,
+    help="Disable response framing - Defaults to False",
+    envvar="quiet",
+)
 @click.option("--prettify/--raw", default=True, help="Prettify the markdowned response")
-def generate(cookie_path, model, index, timeout, prompt, code_theme, color, prettify):
+def generate(
+    cookie_path, model, index, timeout, prompt, code_theme, color, quiet, prettify
+):
     """Generate a quick response with ChatGPT"""
 
     bot = ChatGPT(cookie_path, model, index, timeout=timeout)
@@ -788,7 +852,8 @@ def generate(cookie_path, model, index, timeout, prompt, code_theme, color, pret
         prompt,
         stream=True,
     )
-    stream_output(
+    stdout_handler = stream_console_output if quiet else stream_output
+    stdout_handler(
         content,
         title="ChatGPT Quick Response",
         is_markdown=prettify,
@@ -803,18 +868,12 @@ def generate(cookie_path, model, index, timeout, prompt, code_theme, color, pret
 @error_handler(exit_on_error=True)
 def main():
     dotenv.load_dotenv(os.path.join(os.getcwd(), ".env"))
-    rich.print(
-        Panel(
-            f"""
-            Repo : {__repo__}
-            By : {__author__}
-          """,
-            title=f"WebChatGPT v{__version__}",
-            style=Style(
-                color="cyan",
-                frame=True,
-            ),
-        ),
-    )
-
+    args = sys.argv
+    if (
+        len(args) > 1
+        and args[1] not in ["generate", "interactive"]
+        and not "--help" in args
+    ):
+        # Just an hack to make 'generate' default option
+        sys.argv.insert(1, "generate")
     chat()

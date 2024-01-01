@@ -121,3 +121,10 @@ More console chat manipulation features.
 **What's new?**
 - Clear terminal command added - *Console* 
 - Other minor bugs
+
+## v0.2.4
+
+**What's new?**
+- Option to unframe response - *-q/--quiet*
+- Shortcut introduced `wbc` - *(Console)*
+- Prompt made a positional argument - *(Console)*
