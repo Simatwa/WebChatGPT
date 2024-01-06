@@ -241,7 +241,7 @@ Running `h` while in interactive prompt:
 
 If `$ webchatgpt` doesn't look cool on you, there's this workaround `python -m WebChatGPT`
 
-Starting from [v0.2.4](https://github.com/Simatwa/WebChatGPT/releases) onwards, shortcut to `$ webchatgot` is `$ wbc`.
+Starting from [v0.2.4](https://github.com/Simatwa/WebChatGPT/releases) onwards, shortcut to `$ webchatgpt` is `$ wbc`.
 
 ## [Developer Documentation](https://github.com/Simatwa/WebChatGPT/blob/main/docs/DEVELOPER.md)
 
