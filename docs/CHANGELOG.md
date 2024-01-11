@@ -128,3 +128,8 @@ More console chat manipulation features.
 - Option to unframe response - *-q/--quiet*
 - Shortcut introduced `wbc` - *(Console)*
 - Prompt made a positional argument - *(Console)*
+
+## v0.2.5
+
+**What's new?**
+- Visible vertical overflow

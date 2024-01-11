@@ -71,7 +71,12 @@ def stream_output(
         frame (bool, optional): Flag for response-framing
     """
     render_this = ""
-    with Live(render_this, transient=transient, refresh_per_second=16) as live:
+    with Live(
+        render_this,
+        transient=transient,
+        refresh_per_second=16,
+        vertical_overflow="visible",
+    ) as live:
         for entry in iterable:
             render_this += entry
             live.update(
@@ -117,7 +122,12 @@ def stream_console_output(
         frame (bool, optional): Flag for response-framing
     """
     console = Console(style=style)
-    with Live(console=console, transient=transient, refresh_per_second=16) as live:
+    with Live(
+        console=console,
+        transient=transient,
+        refresh_per_second=16,
+        vertical_overflow="visible",
+    ) as live:
         for entry in iterable:
             live.update(
                 Markdown(entry, code_theme=code_theme) if is_markdown else entry,
