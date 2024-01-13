@@ -55,7 +55,7 @@ def stream_output(
     title_generator: object = None,
     title_generator_params: dict = {},
     code_theme: str = "monokai",
-    frame: bool = False,
+    vertical_overflow: str = "ellipsis",
 ) -> None:
     """Stdout streaming response
 
@@ -68,14 +68,14 @@ def stream_output(
         title_generator (object, optional): Function for generating title. Defaults to None.
         title_generator_params (dict, optional): Kwargs for `title_generator` function. Defaults to {}.
         code_theme (str, optional): Theme for styling codes. Defaults to `monokai`
-        frame (bool, optional): Flag for response-framing
+        vertical_overflow (str, optional): Response rendering vertical overflow behavior. Defaults to ellipsis.
     """
     render_this = ""
     with Live(
         render_this,
         transient=transient,
         refresh_per_second=16,
-        vertical_overflow="visible",
+        vertical_overflow=vertical_overflow,
     ) as live:
         for entry in iterable:
             render_this += entry
@@ -106,7 +106,7 @@ def stream_console_output(
     title_generator: object = None,
     title_generator_params: dict = {},
     code_theme: str = "monokai",
-    frame: bool = False,
+    vertical_overflow: str = "ellipsis",
 ) -> None:
     """Stdout streaming response without frame
 
@@ -119,14 +119,14 @@ def stream_console_output(
         title_generator (object, optional): Function for generating title. Defaults to None.
         title_generator_params (dict, optional): Kwargs for `title_generator` function. Defaults to {}.
         code_theme (str, optional): Theme for styling codes. Defaults to `monokai`
-        frame (bool, optional): Flag for response-framing
+        vertical_overflow (str, optional): Response rendering vertical overflow behavior. Defaults to ellipsis.
     """
     console = Console(style=style)
     with Live(
         console=console,
         transient=transient,
         refresh_per_second=16,
-        vertical_overflow="visible",
+        vertical_overflow=vertical_overflow,
     ) as live:
         for entry in iterable:
             live.update(
@@ -137,6 +137,7 @@ def stream_console_output(
 class busy_bar:
     querying = None
     __spinner = (
+        (),
         ("-", "\\", "|", "/"),
         (
             "█■■■■",
@@ -233,6 +234,7 @@ class InteractiveChatGPT(cmd.Cmd):
         self.show_title = False
         self.code_theme = "monokai"
         self.quiet = False
+        self.vertical_overflow = "ellipsis"
 
     def output_bond(
         self,
@@ -681,6 +683,7 @@ Have some fun!
                     ),
                     title_generator=self.generate_title if self.show_title else None,
                     code_theme=self.code_theme,
+                    vertical_overflow=self.vertical_overflow,
                 )
                 """
                 if self.prettify:
@@ -739,8 +742,8 @@ def chat():
 @click.option(
     "-B",
     "--busy-bar-index",
-    help="Busy bar index [0:/, 1:■█■■■, 2:⣻]",
-    type=click.IntRange(0, 2),
+    help="Busy bar index [0: None, 1:/, 2:■█■■■, 3:⣻]",
+    type=click.IntRange(0, 3),
     default=1,
     envvar="busy_bar_index",
 )
@@ -753,6 +756,14 @@ def chat():
 )
 @click.option(
     "-c", "--color", default=None, help="Font color for printing the contents"
+)
+@click.option(
+    "-vo",
+    "--vertical-overflow",
+    envvar="vertical_overflow",
+    help="Vertical overflow behaviour on content display",
+    type=click.Choice(["visible", "crop", "ellipsis"]),
+    default="ellipsis",
 )
 @click.option(
     "-q",
@@ -775,12 +786,12 @@ def interactive(
     busy_bar_index,
     code_theme,
     color,
+    vertical_overflow,
     quiet,
     prettify,
     show_title,
 ):
     """Chat with ChatGPT interactively"""
-    assert isinstance(busy_bar_index, int), "Index must be an integer only"
     rich.print(
         Panel(
             f"""
@@ -801,6 +812,7 @@ def interactive(
     bot.show_title = show_title
     bot.code_theme = code_theme
     bot.quiet = quiet
+    bot.vertical_overflow = vertical_overflow
     if prompt:
         bot.default(prompt)
     bot.cmdloop()
@@ -844,6 +856,22 @@ def interactive(
     "-c", "--color", default=None, help="Font color for printing the contents"
 )
 @click.option(
+    "-B",
+    "--busy-bar-index",
+    help="Busy bar index [0: None, 1:/, 2:■█■■■, 3:⣻]",
+    type=click.IntRange(0, 3),
+    default=1,
+    envvar="busy_bar_index",
+)
+@click.option(
+    "-vo",
+    "--vertical-overflow",
+    envvar="vertical_overflow",
+    help="Vertical overflow behaviour on content display",
+    type=click.Choice(["visible", "crop", "ellipsis"]),
+    default="ellipsis",
+)
+@click.option(
     "-q",
     "--quiet",
     is_flag=True,
@@ -853,33 +881,39 @@ def interactive(
 )
 @click.option("--prettify/--raw", default=True, help="Prettify the markdowned response")
 def generate(
-    cookie_path, model, index, timeout, prompt, code_theme, color, quiet, prettify
+    cookie_path,
+    model,
+    index,
+    timeout,
+    prompt,
+    code_theme,
+    color,
+    busy_bar_index,
+    vertical_overflow,
+    quiet,
+    prettify,
 ):
     """Generate a quick response with ChatGPT (Default)"""
 
-    bot = ChatGPT(cookie_path, model, index, timeout=timeout)
-    content = bot.chat(
-        prompt,
-        stream=True,
-    )
-    stdout_handler = stream_console_output if quiet else stream_output
-    stdout_handler(
-        content,
-        title="ChatGPT Quick Response",
-        is_markdown=prettify,
-        style=Style(
-            frame=False,
-            color=color,
-        ),
-        code_theme=code_theme,
-    )
+    # bot = ChatGPT(cookie_path, model, index, timeout=timeout)
+    busy_bar.spin_index = busy_bar_index
+    bot = InteractiveChatGPT(cookie_path, model, index, timeout)
+    bot.prettify = prettify
+    bot.color = color
+    bot.code_theme = code_theme
+    bot.quiet = quiet
+    bot.vertical_overflow = vertical_overflow
+    bot.default(prompt)
 
 
 @error_handler(exit_on_error=True)
 def main():
     dotenv.load_dotenv(os.path.join(os.getcwd(), ".env"))
     args = sys.argv
-    if (
+    if len(args) > 1 and args[1] in ("-v", "--version"):
+        print(f"webchatgpt {__version__}")
+        sys.exit(0)
+    elif (
         len(args) > 1
         and args[1] not in ["generate", "interactive"]
         and not "--help" in args

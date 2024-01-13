@@ -133,3 +133,11 @@ More console chat manipulation features.
 
 **What's new?**
 - Visible vertical overflow
+
+## v0.2.6
+
+**What's new?**
+
+- Control vertical overflow *-vo/--vertical-overflow*
+- Check program version *--version/-v*
+- Fully disable busy bar *-B 0*
