@@ -277,7 +277,7 @@ class InteractiveChatGPT(cmd.Cmd):
             with open(save_to, "a") as fh:
                 json.dump(text, fh, indent=4)
             click.secho(f"Successfuly saved to `{save_to}`", fg="green")
-        
+
     def do_h(self, line):
         """Show help info in tabular format"""
         table = Table(
@@ -302,7 +302,7 @@ class InteractiveChatGPT(cmd.Cmd):
             )
         Console().print(table)
         click.secho(f"Submit any bug at : {__repo__}/issues/new", fg="yellow")
-        
+
     @busy_bar.run(help="Ensure conversation ID is correct")
     def do_history(self, line):
         """Show conversation history"""
