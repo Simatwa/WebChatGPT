@@ -277,7 +277,7 @@ class InteractiveChatGPT(cmd.Cmd):
             with open(save_to, "a") as fh:
                 json.dump(text, fh, indent=4)
             click.secho(f"Successfuly saved to `{save_to}`", fg="green")
-
+        
     def do_h(self, line):
         """Show help info in tabular format"""
         table = Table(
@@ -302,7 +302,7 @@ class InteractiveChatGPT(cmd.Cmd):
             )
         Console().print(table)
         click.secho(f"Submit any bug at : {__repo__}/issues/new", fg="yellow")
-
+        
     @busy_bar.run(help="Ensure conversation ID is correct")
     def do_history(self, line):
         """Show conversation history"""
@@ -866,11 +866,12 @@ def generate(
 
 
 @error_handler(exit_on_error=True)
-def main():
+def main(*cmd_args):
+    sys.argv += list(cmd_args)
     dotenv.load_dotenv(os.path.join(os.getcwd(), ".env"))
     args = sys.argv
     if len(args) > 1 and args[1] in ("-v", "--version"):
-        print(f"webchatgpt {__version__}")
+        print(f"webchatgpt v{__version__}")
         sys.exit(0)
     elif (
         len(args) > 1
