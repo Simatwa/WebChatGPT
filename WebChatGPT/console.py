@@ -13,6 +13,7 @@ from rich.markdown import Markdown
 from rich.live import Live
 from rich.prompt import Prompt
 from rich.console import Console
+from rich.table import Table
 from .main import ChatGPT
 from time import sleep
 import logging
@@ -277,72 +278,30 @@ class InteractiveChatGPT(cmd.Cmd):
                 json.dump(text, fh, indent=4)
             click.secho(f"Successfuly saved to `{save_to}`", fg="green")
 
-    def do_h(self, text):
-        """Echoes general help info"""
-        rich.print(
-            Panel(
-                f"""
-Greetings {self.user_name}.
-
-This is a {__info__}
-
-╒════╤════════════════════════╤═══════════════════════════════════════╕
-│    │ Command                │ Action                                │
-╞════╪════════════════════════╪═══════════════════════════════════════╡
-│  0 │ h                      │ Show this help info                   │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│  1 │ history                │ Show conversation history             │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│  2 │ share                  │ Share conversation by link            │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│  3 │ stop_share             │ Revoke shared conversation link       │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│  4 │ rename                 │ Rename conversation title             │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│  5 │ archive                │ Archive or unarchive a conversation   │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│  6 │ shared_conversations   │ Show shared conversations             │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│  7 │ previous_conversations │ Show previous conversations           │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│  8 │ delete_conversation    │ Delete a particular conversation      │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│  9 │ prompts                │ Generate random prompts               │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│ 10 │ account_info           │ ChatGPT account info/setings          │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│ 11 │ ask                    │ Show raw response from ChatGPT        │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│ 12 │ auth                   │ Show current user auth info           │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│ 13 │ migrate                │ Shift to another conversation         │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│ 14 │ set_theme              │ Set theme for displaying codes        │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│ 15 │ copy_this              │ Copy last response                    │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│ 16 │ with_copied            │ Attach last copied text to the prompt │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│ 17 │ clear                  │ Clear console                         │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│ 18 │ ./<command>            │ Run system command                    │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│ 19 │ <any other>            │ Interact with ChatGPT                 │
-├────┼────────────────────────┼───────────────────────────────────────┤
-│ 20 │ exit                   │ Quit Program                          │
-╘════╧════════════════════════╧═══════════════════════════════════════╛
-
-Submit any bug at : {__repo__}/issues/new
-
-Have some fun!
-""",
-                title="Help Info",
-                style=Style(
-                    color="cyan",
-                    frame="double",
-                ),
-            )
+    def do_h(self, line):
+        """Show help info in tabular format"""
+        table = Table(
+            title="Help info",
+            show_lines=True,
         )
+        table.add_column("No.", style="white", justify="center")
+        table.add_column("Command", style="yellow", justify="left")
+        table.add_column("Function", style="cyan")
+        command_methods = [
+            getattr(self, method)
+            for method in dir(self)
+            if callable(getattr(self, method)) and method.startswith("do_")
+        ]
+        command_methods.append(self.default)
+        command_methods.reverse()
+        for no, method in enumerate(command_methods):
+            table.add_row(
+                str(no + 1),
+                method.__name__[3:] if not method == self.default else method.__name__,
+                method.__doc__,
+            )
+        Console().print(table)
+        click.secho(f"Submit any bug at : {__repo__}/issues/new", fg="yellow")
 
     @busy_bar.run(help="Ensure conversation ID is correct")
     def do_history(self, line):
