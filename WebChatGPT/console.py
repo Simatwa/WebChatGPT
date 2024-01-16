@@ -663,6 +663,8 @@ class InteractiveChatGPT(cmd.Cmd):
 
 
 @click.group("chat")
+@click.version_option(__version__, "-v", "--version", package_name="webchatgpt")
+@click.help_option("-h", "--help")
 def chat():
     """Reverse Engineered ChatGPT Web-Version"""
     pass
@@ -736,6 +738,7 @@ def chat():
 @click.option(
     "--show-title/--no-title", default=True, help="Flag for title generation control"
 )
+@click.help_option("-h", "--help")
 def interactive(
     cookie_path,
     model,
@@ -839,6 +842,7 @@ def interactive(
     envvar="quiet",
 )
 @click.option("--prettify/--raw", default=True, help="Prettify the markdowned response")
+@click.help_option("-h", "--help")
 def generate(
     cookie_path,
     model,
@@ -870,14 +874,7 @@ def main(*cmd_args):
     sys.argv += list(cmd_args)
     dotenv.load_dotenv(os.path.join(os.getcwd(), ".env"))
     args = sys.argv
-    if len(args) > 1 and args[1] in ("-v", "--version"):
-        print(f"webchatgpt v{__version__}")
-        sys.exit(0)
-    elif (
-        len(args) > 1
-        and args[1] not in ["generate", "interactive"]
-        and not "--help" in args
-    ):
+    if len(args) > 1 and args[1] not in chat.commands.keys() and not "-" in args[1]:
         # Just an hack to make 'generate' default option
         sys.argv.insert(1, "generate")
     chat()
