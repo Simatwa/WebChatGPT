@@ -469,9 +469,11 @@ class InteractiveChatGPT(cmd.Cmd):
     def do_ask(self, line):
         """Show raw response from ChatGPT"""
         response = self.bot.ask(
-            prompt=line
-            if bool(line.strip())
-            else click.prompt("Prompt", type=click.STRING)
+            prompt=(
+                line
+                if bool(line.strip())
+                else click.prompt("Prompt", type=click.STRING)
+            )
         )
         self.output_bond("Raw Response", response, is_json=True)
 

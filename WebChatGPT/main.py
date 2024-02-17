@@ -5,6 +5,64 @@ import logging
 import json
 import re
 from functools import lru_cache
+import websocket
+from base64 import b64decode
+from WebChatGPT.errors import WebSocketError
+from threading import Thread as thr
+
+
+class Websocket:
+
+    def __init__(
+        self,
+        data: dict,
+        chatgpt: object,
+    ):
+        chatgpt.socket_closed = False
+        chatgpt.loading_chunk = ""
+        self.payload = data
+        self.url = data.get("wss_url")
+        self.payload.pop("wss_url")
+        self.chatgpt = chatgpt
+        self.last_response_chunk: dict = {}
+        self.last_response_undecoded_chunk: dict = {}
+        # websocket.enableTrace(True)
+
+    def on_message(self, ws, message):
+        # print(f"Received message: {message}")
+        response = json.loads(message)
+        self.chatgpt.last_response_undecoded_chunk = response
+        decoded_body = b64decode(response["body"]).decode("utf-8")
+        response["body"] = decoded_body
+        self.chatgpt.last_response_chunk = response
+        self.chatgpt.loading_chunk = decoded_body
+
+    def on_error(self, ws, error):
+        self.on_close("ws")
+        raise WebSocketError(error)
+
+    def on_close(self, ws, *args, **kwargs):
+        self.chatgpt.socket_closed = True
+
+    def on_open(
+        self,
+        ws,
+    ):
+        json_data = json.dumps(self.payload)
+        ws.send(json_data)
+
+    def run(
+        self,
+    ):
+        ws = websocket.WebSocketApp(
+            self.url,
+            on_message=self.on_message,
+            on_error=self.on_error,
+            on_close=self.on_close,
+            header=self.chatgpt.session.headers,
+        )
+        ws.on_open = self.on_open
+        ws.run_forever()
 
 
 class ChatGPT:
@@ -78,7 +136,10 @@ class ChatGPT:
         self.__already_init = False
         self.__index = conversation_index
         self.__title_cache = {}
-        self.stream_chunk_size = 64
+        self.last_response_undecoded_chunk: str = ""
+        self.last_response_chunk: dict = {}
+        self.loading_chunk: str = ""
+        self.socket_closed: bool = True
 
     def __generate_payload(self, prompt: str) -> dict:
         return utils.generate_payload(self, prompt)
@@ -166,22 +227,23 @@ class ChatGPT:
             url=self.conversation_endpoint,
             json=self.__generate_payload(prompt),
             timeout=self.timeout,
-            stream=stream,
+            stream=False,
         )
-        if (
-            response.ok
-            and response.headers.get("content-type")
-            == "text/event-stream; charset=utf-8"
-        ):
+        response.raise_for_status()
 
-            def for_stream():
-                for value in response.iter_lines(
-                    decode_unicode=True,
-                    delimiter="data:",
-                    chunk_size=self.stream_chunk_size,
-                ):
+        def for_stream():
+
+            ws = Websocket(response.json(), self)
+            t1 = thr(target=ws.run)
+            t1.start()
+            cached_chunk = ""
+            while True:
+                if self.loading_chunk != cached_chunk:
+                    # New chunk loaded
                     try:
-                        to_dict = json.loads(value)
+                        value = self.loading_chunk
+                        # print(value)
+                        to_dict = json.loads(value[5:])
                         if "is_completion" in to_dict.keys():
                             # Metadata (response)
                             self.last_response_metadata[
@@ -197,35 +259,18 @@ class ChatGPT:
                             yield value
                         pass
 
-            def for_non_stream():
-                response_to_be_returned = {}
-                for value in response.iter_lines(
-                    decode_unicode=True,
-                    delimiter="data:",
-                    chunk_size=self.stream_chunk_size,
-                ):
-                    try:
-                        to_dict = json.loads(value)
-                        if "is_completion" in to_dict.keys():
-                            # Metadata (response)
-                            self.last_response_metadata[
-                                2 if to_dict.get("is_completion") else 1
-                            ] = to_dict
-                            continue
-                        # Only data containing the `feedback body` make it to here
-                        self.last_response.update(to_dict)
-                        response_to_be_returned.update(to_dict)
-                    except json.decoder.JSONDecodeError:
-                        # Caused by either empty string or [DONE]
-                        pass
-                return response_to_be_returned
+                    cached_chunk = self.loading_chunk
 
-            return for_stream() if stream else for_non_stream()
+                if self.socket_closed:
+                    t1.join()
+                    break
 
-        else:
-            raise Exception(
-                f"Failed to fetch response - ({response.status_code}, {response.reason} : {response.headers.get('content-type')} : {response.text}"
-            )
+        def for_non_stream():
+            for _ in for_stream():
+                pass
+            return self.last_response
+
+        return for_stream() if stream else for_non_stream()
 
     def chat(self, prompt: str, stream: bool = False) -> str:
         """Interact with ChatGPT on the fly
@@ -385,9 +430,11 @@ class ChatGPT:
         ```
         """
         resp = self.session.get(
-            self.account_details_endpoint
-            if in_details
-            else self.account_detail_endpoint,
+            (
+                self.account_details_endpoint
+                if in_details
+                else self.account_detail_endpoint
+            ),
             timeout=self.timeout,
         )
         return utils.is_json(resp, "account data")
@@ -782,9 +829,9 @@ class ChatGPT:
         shareds = utils.is_json(resp)
         for index, entry in enumerate(shareds["items"]):
             # appends view url to each conversation
-            shareds["items"][index][
-                "url"
-            ] = self.shared_conversation_view_endpoint % dict(share_id=entry["id"])
+            shareds["items"][index]["url"] = (
+                self.shared_conversation_view_endpoint % dict(share_id=entry["id"])
+            )
         return shareds
 
     def stop_sharing_conversation(self, share_id: str) -> dict:
