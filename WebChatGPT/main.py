@@ -9,6 +9,7 @@ import websocket
 from base64 import b64decode
 from WebChatGPT.errors import WebSocketError
 from threading import Thread as thr
+from typing import Iterator
 
 
 class Websocket:
@@ -17,6 +18,7 @@ class Websocket:
         self,
         data: dict,
         chatgpt: object,
+        trace: bool = False,
     ):
         chatgpt.socket_closed = False
         chatgpt.loading_chunk = ""
@@ -26,10 +28,9 @@ class Websocket:
         self.chatgpt = chatgpt
         self.last_response_chunk: dict = {}
         self.last_response_undecoded_chunk: dict = {}
-        # websocket.enableTrace(True)
+        websocket.enableTrace(trace)
 
     def on_message(self, ws, message):
-        # print(f"Received message: {message}")
         response = json.loads(message)
         self.chatgpt.last_response_undecoded_chunk = response
         decoded_body = b64decode(response["body"]).decode("utf-8")
@@ -48,7 +49,7 @@ class Websocket:
         self,
         ws,
     ):
-        json_data = json.dumps(self.payload)
+        json_data = json.dumps(self.payload, indent=4)
         ws.send(json_data)
 
     def run(
@@ -59,10 +60,9 @@ class Websocket:
             on_message=self.on_message,
             on_error=self.on_error,
             on_close=self.on_close,
-            header=self.chatgpt.session.headers,
+            on_open=self.on_open,
         )
-        ws.on_open = self.on_open
-        ws.run_forever()
+        ws.run_forever(origin="https://chat.openai.com")
 
 
 class ChatGPT:
@@ -75,6 +75,7 @@ class ChatGPT:
         user_agent: str = "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0",
         timeout: tuple = 30,
         disable_history_and_training: bool = False,
+        trace: bool = False,
     ):
         """Initializes ChatGPT
 
@@ -85,6 +86,7 @@ class ChatGPT:
             locale (str, optional): Your locale. Defaults to `en-US`
             user_agent (str, optional): Http request header User-Agent. Defaults to `Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0`
             timeout (int, optional): Http request timeout.
+            trace (bool, optional): Trace websocket requests. Defaults to False.
 
         """
         self.session = requests.Session()
@@ -140,6 +142,9 @@ class ChatGPT:
         self.last_response_chunk: dict = {}
         self.loading_chunk: str = ""
         self.socket_closed: bool = True
+        self.trace = trace
+        # self.register_ws =self.session.post("https://chat.openai.com/backend-api/register-websocket")
+        # Websocket(self.register_ws.json(),self).run()
 
     def __generate_payload(self, prompt: str) -> dict:
         return utils.generate_payload(self, prompt)
@@ -169,9 +174,7 @@ class ChatGPT:
         prompt: str,
         stream: bool = False,
         raw_response: bool = False,
-    ) -> (
-        dict
-    ):  # dict/Iterator but for compatibility with Python 3.9 just `-> dict` is cool
+    ) -> dict | Iterator:
         """Chat with ChatGPT
 
                 Args:
@@ -231,12 +234,14 @@ class ChatGPT:
         )
         response.raise_for_status()
 
+        # out = lambda v:print(json.dumps(dict(v), indent=4))
+        # out(response.headers)
         def for_stream():
 
-            ws = Websocket(response.json(), self)
+            ws = Websocket(response.json(), self, self.trace)
             t1 = thr(target=ws.run)
             t1.start()
-            cached_chunk = ""
+            cached_chunk = self.loading_chunk
             while True:
                 if self.loading_chunk != cached_chunk:
                     # New chunk loaded

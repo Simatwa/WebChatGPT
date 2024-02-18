@@ -41,8 +41,9 @@ setup(
         "rich==13.3.4",
         "clipman==3.1.0",
         "pyperclip==1.8.2",
+        "websocket-client==1.7.0",
     ],
-    python_requires=">=3.9",
+    python_requires=">=3.10",
     keywords=[
         "chatgpt",
         "webchatgpt",
