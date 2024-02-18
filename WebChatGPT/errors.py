@@ -8,3 +8,7 @@ class CookieExpiredError(Exception):
 
 class VerificationError(Exception):
     pass
+
+
+class MaximumRetrialError(Exception):
+    pass

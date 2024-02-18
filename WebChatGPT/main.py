@@ -10,6 +10,7 @@ from base64 import b64decode
 from WebChatGPT.errors import WebSocketError
 from threading import Thread as thr
 from typing import Iterator
+from .errors import MaximumRetrialError
 
 
 class Websocket:
@@ -22,7 +23,7 @@ class Websocket:
     ):
         chatgpt.socket_closed = False
         chatgpt.loading_chunk = ""
-        self.payload = data
+        self.payload = data.copy()
         self.url = data.get("wss_url")
         self.payload.pop("wss_url")
         self.chatgpt = chatgpt
@@ -143,6 +144,7 @@ class ChatGPT:
         self.loading_chunk: str = ""
         self.socket_closed: bool = True
         self.trace = trace
+        self.request_more_times: int = 2
         # self.register_ws =self.session.post("https://chat.openai.com/backend-api/register-websocket")
         # Websocket(self.register_ws.json(),self).run()
 
@@ -233,17 +235,20 @@ class ChatGPT:
             stream=False,
         )
         response.raise_for_status()
+        ws_payload = dict(response.json())
+        self.__request_more_count: int = 0
 
         # out = lambda v:print(json.dumps(dict(v), indent=4))
         # out(response.headers)
         def for_stream():
 
-            ws = Websocket(response.json(), self, self.trace)
+            ws = Websocket(ws_payload, self, self.trace)
             t1 = thr(target=ws.run)
             t1.start()
-            cached_chunk = self.loading_chunk
+            cached_loading_chunk = self.loading_chunk
+            cached_last_response = self.last_response.copy()
             while True:
-                if self.loading_chunk != cached_chunk:
+                if self.loading_chunk != cached_loading_chunk:
                     # New chunk loaded
                     try:
                         value = self.loading_chunk
@@ -264,11 +269,33 @@ class ChatGPT:
                             yield value
                         pass
 
-                    cached_chunk = self.loading_chunk
+                    finally:
+                        cached_loading_chunk = self.loading_chunk
 
                 if self.socket_closed:
                     t1.join()
                     break
+
+            if (
+                self.last_response == cached_last_response
+                or self.last_response["message"]["status"] != "finished_successfully"
+            ):
+
+                # print(json.dumps(self.last_response, indent=4))
+                # print("Requesting more body")
+                # print('=='*40)
+                t1.join()
+                if self.__request_more_count >= self.request_more_times:
+                    raise MaximumRetrialError(
+                        f"Failed to generate response after {self.request_more_times} attempts"
+                    )
+
+                for value in for_stream():
+                    yield value
+
+                self.__request_more_count += 1
+            # else:
+            #   print(print(json.dumps(self.last_response_chunk, indent=4)))
 
         def for_non_stream():
             for _ in for_stream():
