@@ -148,3 +148,9 @@ More console chat manipulation features.
 
 - Enhanced help info.
 - Other minor updates.
+
+## v0.2.8
+
+**What's new?**
+
+- fix: Uses websocket.
