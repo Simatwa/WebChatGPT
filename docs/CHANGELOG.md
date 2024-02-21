@@ -154,3 +154,9 @@ More console chat manipulation features.
 **What's new?**
 
 - fix: Uses websocket.
+
+## v0.2.9
+
+**What's new?**
+
+- patch: Independencies
