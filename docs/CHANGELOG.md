@@ -160,3 +160,10 @@ More console chat manipulation features.
 **What's new?**
 
 - patch: Independencies
+
+## v0.3.0
+
+**What's new?*
+
+- patch : Fail to generate response. Resolves #15 #14
+- patch : Drop support for websocket. 

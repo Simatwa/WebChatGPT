@@ -1,7 +1,3 @@
-class WebSocketError(Exception):
-    pass
-
-
 class CookieExpiredError(Exception):
     pass
 

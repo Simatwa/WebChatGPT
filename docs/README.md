@@ -26,9 +26,6 @@
 
 Unlike the [official Openai library](https://github.com/openai/openai-python), this library makes REST-API calls to [ChatGPT](https://chat.openai.com) via the **browser** endpoints. *No API-KEY required*
 
-> [!CAUTION]
-> **Currently** very unreliable!
-
 ```python
 from WebChatGPT import ChatGPT
 bot = ChatGPT(

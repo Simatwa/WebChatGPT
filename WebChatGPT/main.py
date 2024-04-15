@@ -1,69 +1,10 @@
 #!/usr/bin/python
 import requests
 from WebChatGPT import utils
-import logging
 import json
 import re
 from functools import lru_cache
-import websocket
-from base64 import b64decode
-from WebChatGPT.errors import WebSocketError
-from threading import Thread as thr
 from typing import Iterator
-from .errors import MaximumRetrialError
-
-
-class Websocket:
-
-    def __init__(
-        self,
-        data: dict,
-        chatgpt: object,
-        trace: bool = False,
-    ):
-        chatgpt.socket_closed = False
-        chatgpt.loading_chunk = ""
-        self.payload = data.copy()
-        self.url = data.get("wss_url")
-        self.payload.pop("wss_url")
-        self.chatgpt = chatgpt
-        self.last_response_chunk: dict = {}
-        self.last_response_undecoded_chunk: dict = {}
-        websocket.enableTrace(trace)
-
-    def on_message(self, ws, message):
-        response = json.loads(message)
-        self.chatgpt.last_response_undecoded_chunk = response
-        decoded_body = b64decode(response["body"]).decode("utf-8")
-        response["body"] = decoded_body
-        self.chatgpt.last_response_chunk = response
-        self.chatgpt.loading_chunk = decoded_body
-
-    def on_error(self, ws, error):
-        self.on_close("ws")
-        raise WebSocketError(error)
-
-    def on_close(self, ws, *args, **kwargs):
-        self.chatgpt.socket_closed = True
-
-    def on_open(
-        self,
-        ws,
-    ):
-        json_data = json.dumps(self.payload, indent=4)
-        ws.send(json_data)
-
-    def run(
-        self,
-    ):
-        ws = websocket.WebSocketApp(
-            self.url,
-            on_message=self.on_message,
-            on_error=self.on_error,
-            on_close=self.on_close,
-            on_open=self.on_open,
-        )
-        ws.run_forever(origin="https://chat.openai.com")
 
 
 class ChatGPT:
@@ -127,6 +68,9 @@ class ChatGPT:
         self.stop_sharing_conversation_endpoint = (
             "https://chat.openai.com/backend-api/%(share_id)s"
         )
+        self.sentinel_chat_requirements_endpoint: str = (
+            "https://chat.openai.com/backend-api/sentinel/chat-requirements"
+        )
         self.session.headers["User-Agent"] = user_agent
         self.locale = locale
         self.model = model
@@ -139,12 +83,7 @@ class ChatGPT:
         self.__already_init = False
         self.__index = conversation_index
         self.__title_cache = {}
-        self.last_response_undecoded_chunk: str = ""
-        self.last_response_chunk: dict = {}
-        self.loading_chunk: str = ""
-        self.socket_closed: bool = True
-        self.trace = trace
-        self.request_more_times: int = 2
+        self.stream_chunk_size = 64
         # self.register_ws =self.session.post("https://chat.openai.com/backend-api/register-websocket")
         # Websocket(self.register_ws.json(),self).run()
 
@@ -170,6 +109,13 @@ class ChatGPT:
 
     def get_current_message_id(self):
         return self.last_response_metadata.get(2).get("message_id")
+
+    def update_sentinel_tokens(self):
+        resp = self.session.post(self.sentinel_chat_requirements_endpoint, json={})
+        resp.raise_for_status()
+        self.session.headers.update(
+            {"OpenAI-Sentinel-Chat-Requirements-Token": resp.json()["token"]}
+        )
 
     def ask(
         self,
@@ -228,32 +174,28 @@ class ChatGPT:
         }
         ```
         """
+        self.update_sentinel_tokens()
         response = self.session.post(
             url=self.conversation_endpoint,
             json=self.__generate_payload(prompt),
             timeout=self.timeout,
-            stream=False,
+            stream=True,
         )
-        response.raise_for_status()
-        ws_payload = dict(response.json())
-        self.__request_more_count: int = 0
+        # response.raise_for_status()
+        if (
+            response.ok
+            and response.headers.get("content-type")
+            == "text/event-stream; charset=utf-8"
+        ):
 
-        # out = lambda v:print(json.dumps(dict(v), indent=4))
-        # out(response.headers)
-        def for_stream():
-
-            ws = Websocket(ws_payload, self, self.trace)
-            t1 = thr(target=ws.run)
-            t1.start()
-            cached_loading_chunk = self.loading_chunk
-            cached_last_response = self.last_response.copy()
-            while True:
-                if self.loading_chunk != cached_loading_chunk:
-                    # New chunk loaded
+            def for_stream():
+                for value in response.iter_lines(
+                    decode_unicode=True,
+                    delimiter="data:",
+                    chunk_size=self.stream_chunk_size,
+                ):
                     try:
-                        value = self.loading_chunk
-                        # print(value)
-                        to_dict = json.loads(value[5:])
+                        to_dict = json.loads(value)
                         if "is_completion" in to_dict.keys():
                             # Metadata (response)
                             self.last_response_metadata[
@@ -269,40 +211,35 @@ class ChatGPT:
                             yield value
                         pass
 
-                    finally:
-                        cached_loading_chunk = self.loading_chunk
+            def for_non_stream():
+                response_to_be_returned = {}
+                for value in response.iter_lines(
+                    decode_unicode=True,
+                    delimiter="data:",
+                    chunk_size=self.stream_chunk_size,
+                ):
+                    try:
+                        to_dict = json.loads(value)
+                        if "is_completion" in to_dict.keys():
+                            # Metadata (response)
+                            self.last_response_metadata[
+                                2 if to_dict.get("is_completion") else 1
+                            ] = to_dict
+                            continue
+                        # Only data containing the `feedback body` make it to here
+                        self.last_response.update(to_dict)
+                        response_to_be_returned.update(to_dict)
+                    except json.decoder.JSONDecodeError:
+                        # Caused by either empty string or [DONE]
+                        pass
+                return response_to_be_returned
 
-                if self.socket_closed:
-                    t1.join()
-                    break
+            return for_stream() if stream else for_non_stream()
 
-            if (
-                self.last_response == cached_last_response
-                or self.last_response["message"]["status"] != "finished_successfully"
-            ):
-
-                # print(json.dumps(self.last_response, indent=4))
-                # print("Requesting more body")
-                # print('=='*40)
-                t1.join()
-                if self.__request_more_count >= self.request_more_times:
-                    raise MaximumRetrialError(
-                        f"Failed to generate response after {self.request_more_times} attempts"
-                    )
-
-                for value in for_stream():
-                    yield value
-
-                self.__request_more_count += 1
-            # else:
-            #   print(print(json.dumps(self.last_response_chunk, indent=4)))
-
-        def for_non_stream():
-            for _ in for_stream():
-                pass
-            return self.last_response
-
-        return for_stream() if stream else for_non_stream()
+        else:
+            raise Exception(
+                f"Failed to fetch response - ({response.status_code}, {response.reason} : {response.headers.get('content-type')} : {response.text}"
+            )
 
     def chat(self, prompt: str, stream: bool = False) -> str:
         """Interact with ChatGPT on the fly

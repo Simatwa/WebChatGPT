@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 import json
 import logging
-import os
+import locale
 from uuid import uuid4
 from typing import Any
 from .errors import CookieExpiredError
@@ -27,6 +27,7 @@ headers = request_headers = {
     "Sec-Fetch-Mode": "cors",
     "Sec-Fetch-Site": "same-origin",
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0",
+    "OAI-Language": locale.getlocale()[0].replace("_", "-"),
 }
 
 response_example = {
@@ -238,7 +239,7 @@ def generate_payload(self: object, prompt: str) -> dict:
         "timezone_offset_min": -180,
         "suggestions": [],
         "history_and_training_disabled": self.disable_history_and_training,
-        "arkose_token": None,
+        # "arkose_token": None,
         "conversation_mode": {"kind": "primary_assistant"},
         "force_paragen": False,
         "force_rate_limit": False,
