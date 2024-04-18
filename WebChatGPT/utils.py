@@ -15,8 +15,8 @@ __common_error_support_info = "Incase you have no idea on how to get the cookies
 headers = request_headers = {
     "Accept": "text/event-stream",
     "Accept-Encoding": "gzip, deflate",
-    "Accept-Language": "en-US",
-    "Alt-Used": "chat.openai.com",
+    "Accept-Language": "en-US,en;q=0.5",
+    # "Alt-Used": "chat.openai.com",
     "Authorization": f"Bearer %(value)s",
     "Connection": "keep-alive",
     "Content-Type": "application/json",
@@ -26,7 +26,7 @@ headers = request_headers = {
     "Sec-Fetch-Dest": "empty",
     "Sec-Fetch-Mode": "cors",
     "Sec-Fetch-Site": "same-origin",
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0",
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:124.0) Gecko/20100101 Firefox/124.0",
     "OAI-Language": locale.getlocale()[0].replace("_", "-"),
 }
 
@@ -103,12 +103,12 @@ def get_request_headers_and_append_auth(self) -> dict:
         headers=request_headers,
     )
     # This sh*t here is raising http 403 in Python 3.9. Consider fixing it.
-    if not resp.ok:
+    self.auth = resp.json()
+    if not resp.ok or not self.auth:
         raise VerificationError(
             f"Failed to fetch Auth value ({resp.status_code}, {resp.reason}), supply path to correct cookies.  "
             + __common_error_support_info
         )
-    self.auth = resp.json()
     if self.auth.get("error"):
         raise CookieExpiredError(
             "Your cookies have expired, login to `chat.openai.com` and then export new ones."
@@ -151,7 +151,7 @@ def is_json(response: object, info: str = ""):
     content_type = response.headers.get("content-type")
     if not "application/json" in content_type:
         raise Exception(
-            f"Failed to fetch {info} - `{content_type}` : \n {response.text}"
+            f"Failed to fetch {info} - ({response.status_code}, {response.reason}) `{content_type}` : \n {response.text}"
         )
     return response.json()
 

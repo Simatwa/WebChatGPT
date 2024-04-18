@@ -14,7 +14,7 @@ class ChatGPT:
         model: str = "text-davinci-002-render-sha",
         conversation_index: int = 1,
         locale: str = "en-US",
-        user_agent: str = "Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0",
+        user_agent: str = utils.request_headers["User-Agent"],
         timeout: tuple = 30,
         disable_history_and_training: bool = False,
         trace: bool = False,
@@ -84,8 +84,6 @@ class ChatGPT:
         self.__index = conversation_index
         self.__title_cache = {}
         self.stream_chunk_size = 64
-        # self.register_ws =self.session.post("https://chat.openai.com/backend-api/register-websocket")
-        # Websocket(self.register_ws.json(),self).run()
 
     def __generate_payload(self, prompt: str) -> dict:
         return utils.generate_payload(self, prompt)
